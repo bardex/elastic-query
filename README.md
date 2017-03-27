@@ -1,8 +1,8 @@
-#PHP Elastic Query
+# PHP Elastic Query
 
-##Examples
+## Examples
 
-###DEVEL
+### DEVEL
 
 ```
 <?php
