@@ -1,0 +1,21 @@
+{
+  "name": "bardex/elastic-query",
+  "authors": [
+    {
+      "name": "Alexey Sumin",
+      "email": "bardex@ya.ru"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "elasticsearch/elasticsearch": "~2.0",
+    "php": ">=5.5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*"
+  },
+  "autoload": {
+    "psr-4": {
+    }
+  }
+}
