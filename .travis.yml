@@ -5,6 +5,12 @@ php:
 os:
   - linux
 
+services:
+  - elasticsearch
+
+before_script:
+  - sleep 10
+
 git:
   depth: 1
 
