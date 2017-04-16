@@ -82,7 +82,7 @@ class Query implements \JsonSerializable
      */
     public function setIndex($index)
     {
-        $this->index = (string)$index;
+        $this->index = (string) $index;
         return $this;
     }
 
@@ -93,7 +93,7 @@ class Query implements \JsonSerializable
      */
     public function setType($type)
     {
-        $this->type = (string)$type;
+        $this->type = (string) $type;
         return $this;
     }
 
@@ -125,7 +125,7 @@ class Query implements \JsonSerializable
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html
      * @return self $this
      */
-    public function addScriptField($fieldName, $script, array $params=null, $lang='painless')
+    public function addScriptField($fieldName, $script, array $params = null, $lang = 'painless')
     {
         $item = [
             'script' => [
@@ -133,7 +133,7 @@ class Query implements \JsonSerializable
                 'inline' => $script,
             ]
         ];
-        if ( $params ) {
+        if ($params) {
             $item['script']['params'] = $params;
         }
         $this->scriptFields[$fieldName] = $item;
@@ -216,7 +216,7 @@ class Query implements \JsonSerializable
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html
      * @return $this;
      */
-    public function whereBetween($field, $min, $max, $dateFormat=null)
+    public function whereBetween($field, $min, $max, $dateFormat = null)
     {
         $params = ['gte' => $min, 'lte' => $max];
         if ($dateFormat) {
@@ -240,7 +240,7 @@ class Query implements \JsonSerializable
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html
      */
-    public function whereScript($script, array $params=null, $lang='painless')
+    public function whereScript($script, array $params = null, $lang = 'painless')
     {
         $item = [
             'script' => [
@@ -250,7 +250,7 @@ class Query implements \JsonSerializable
                 ]
             ]
         ];
-        if ( $params ) {
+        if ($params) {
             $item['script']['script']['params'] = $params;
         }
         $this->filters[] = $item;
@@ -264,7 +264,7 @@ class Query implements \JsonSerializable
      * @param null $dateFormat
      * @return $this
      */
-    public function whereGreaterOrEqual($field, $value, $dateFormat=null)
+    public function whereGreaterOrEqual($field, $value, $dateFormat = null)
     {
         $params = ['gte' => $value];
         if ($dateFormat) {
@@ -281,7 +281,7 @@ class Query implements \JsonSerializable
      * @param null $dateFormat
      * @return $this
      */
-    public function whereGreater($field, $value, $dateFormat=null)
+    public function whereGreater($field, $value, $dateFormat = null)
     {
         $params = ['gt' => $value];
         if ($dateFormat) {
@@ -298,7 +298,7 @@ class Query implements \JsonSerializable
      * @param null $dateFormat
      * @return $this
      */
-    public function whereLessOrEqual($field, $value, $dateFormat=null)
+    public function whereLessOrEqual($field, $value, $dateFormat = null)
     {
         $params = ['lte' => $value];
         if ($dateFormat) {
@@ -315,7 +315,7 @@ class Query implements \JsonSerializable
      * @param null $dateFormat
      * @return $this
      */
-    public function whereLess($field, $value, $dateFormat=null)
+    public function whereLess($field, $value, $dateFormat = null)
     {
         $params = ['lt' => $value];
         if ($dateFormat) {
@@ -351,10 +351,10 @@ class Query implements \JsonSerializable
      * @example $q->addOrderBy('channel', 'asc')->addOrderBy('_score', 'desc');
      * @return $this
      */
-    public function addOrderBy($field, $order='asc')
+    public function addOrderBy($field, $order = 'asc')
     {
-        $field = (string)$field;
-        $order = (string)$order;
+        $field = (string) $field;
+        $order = (string) $order;
         $this->orders[] = [$field => ['order' => $order]];
         return $this;
     }
@@ -365,10 +365,10 @@ class Query implements \JsonSerializable
      * @param int $offset - сколько строк пропустить
      * @return $this;
      */
-    public function limit($limit, $offset=0)
+    public function limit($limit, $offset = 0)
     {
-        $this->limit  = (int)$limit;
-        $this->offset = (int)$offset;
+        $this->limit  = (int) $limit;
+        $this->offset = (int) $offset;
         return $this;
     }
 
@@ -389,9 +389,9 @@ class Query implements \JsonSerializable
         $this->totalResults = $result['total']; // total results
         foreach ($result['hits'] as $hit) {
             $row = $hit['_source'];
-            if ( isset($hit['fields']) ) { // script fields
+            if (isset($hit['fields'])) { // script fields
                 foreach ($hit['fields'] as $field => $data) {
-                    if ( count($data) == 1 ) {
+                    if (count($data) == 1) {
                         $row[$field] = array_shift($data);
                     }
                     else {
@@ -414,7 +414,7 @@ class Query implements \JsonSerializable
     public function fetchOne()
     {
         $results = $this->fetchAll();
-        if ( count($results) ) {
+        if (count($results)) {
             return array_shift($results);
         }
         else {
@@ -453,23 +453,23 @@ class Query implements \JsonSerializable
             'from'  => $this->offset
         ];
 
-        if ( $this->orders ) {
+        if ($this->orders) {
             $params['body']['sort'] = $this->orders;
         }
 
-        if ( $this->includes ) {
+        if ($this->includes) {
             $params['body']['_source']['includes'] = $this->includes;
         }
 
-        if ( $this->excludes ) {
+        if ($this->excludes) {
             $params['body']['_source']['excludes'] = $this->excludes;
         }
 
-        if ( !isset( $params['body']['_source']) ) {
+        if (!isset($params['body']['_source'])) {
             $params['body']['_source'] = true;
         }
 
-        if ( $this->scriptFields ) {
+        if ($this->scriptFields) {
             $params['body']['script_fields'] = $this->scriptFields;
         }
 
