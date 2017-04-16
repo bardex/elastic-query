@@ -1,5 +1,7 @@
 # PHP Elastic Query
 
+[![Build Status](https://travis-ci.org/bardex/elastic-query.svg?branch=devel)](https://travis-ci.org/bardex/elastic-query)
+
 ## Examples
 
 ### DEVEL
