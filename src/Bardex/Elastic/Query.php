@@ -396,12 +396,30 @@ class Query implements \JsonSerializable
      */
     public function fetchAll()
     {
+        // build query
+        $query  = $this->getQuery();
+
+        // send query to elastic
+        $start  = microtime(1);
+        $result = $this->elastic->search($query);
+        $time   = round((microtime(1) - $start) * 1000); // measure time
+
+        // extract results
         $this->totalResults = 0;
         $results = [];
-        $query  = $this->getQuery(); // build query
-        $result = $this->elastic->search($query); // send query to elastic
         $result = $result['hits'];
         $this->totalResults = $result['total']; // total results
+
+        $context = [
+            'type'  => 'elastic',
+            'query' => json_encode($query),
+            'time'  => $time,
+            'fetched_rows' => count($result['hits']),
+            'found_rows'   => $this->totalResults
+        ];
+
+        $this->logger->debug("Elastic query ($time ms)", $context);
+
         foreach ($result['hits'] as $hit) {
             $row = $hit['_source'];
             if (isset($hit['fields'])) { // script fields
