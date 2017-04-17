@@ -17,9 +17,12 @@
   },
   "autoload": {
     "psr-4": {
+      "Bardex\\Elastic\\": "src/Bardex/Elastic"
     }
   },
   "autoload-dev": {
-    "psr-4": { "Bardex\\Tests\\": "tests/Bardex/Tests" }
+    "psr-4": {
+      "Bardex\\Tests\\": "tests/Bardex/Tests"
+    }
   }
 }
