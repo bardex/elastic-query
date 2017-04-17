@@ -7,7 +7,7 @@ class ElasticConnectTest extends AbstractTestCase
 
     public function testConnection()
     {
-        $this->assertTrue( $this->client->ping() );
+        $this->assertTrue( static::$client->ping() );
     }
 
 
