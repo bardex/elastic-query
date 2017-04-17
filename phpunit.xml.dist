@@ -11,9 +11,10 @@
 >
     <testsuites>
         <testsuite name="Package Test Suite">
-            <directory suffix=".php">./tests/</directory>
+            <directory suffix=".php">./tests/Bardex/Tests</directory>
         </testsuite>
     </testsuites>
     <php>
+        <env name="ELASTIC_HOST" value="localhost:9200"/>
     </php>
 </phpunit>

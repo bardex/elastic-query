@@ -18,5 +18,8 @@
   "autoload": {
     "psr-4": {
     }
+  },
+  "autoload-dev": {
+    "psr-4": { "Bardex\\Tests\\": "tests/Bardex/Tests" }
   }
 }
