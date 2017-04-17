@@ -198,6 +198,8 @@ class Query implements \JsonSerializable
      */
     public function whereIn($field, array $values)
     {
+        // потому что ES не понимает дырки в ключах
+        $values = array_values($values);
         $this->filters[] = ['terms' => [$field => $values]];
         return $this;
     }
