@@ -353,7 +353,17 @@ class Query implements \JsonSerializable
      */
     public function whereMatch($field, $text)
     {
-        $this->filters[] = ['match' => [$field => $text]];
+        if ( is_array($field) ) {
+            $this->filters[] = [
+                'multi_match' => [
+                    'query'  => $text,
+                    'fields' => $field
+                ]
+            ];
+        }
+        else {
+            $this->filters[] = ['match' => [$field => $text]];
+        }
         return $this;
     }
 
