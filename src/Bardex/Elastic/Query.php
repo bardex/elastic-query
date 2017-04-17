@@ -70,9 +70,22 @@ class Query implements \JsonSerializable
      */
     protected $scriptFields = [];
 
+    /**
+     * Логгер
+     * @var \Psr\Log\LoggerInterface $logger
+     */
+    protected $logger;
+
     public function __construct(\Elasticsearch\Client $elastic)
     {
         $this->elastic = $elastic;
+        $this->logger = new \Psr\Log\NullLogger;
+    }
+
+    public function setLogger(\Psr\Log\LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
     }
 
     /**
@@ -426,7 +439,7 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Количество строк всего найденных в индексе
+     * Количество документов всего найденных в индексе, для последнего запроса.
      * @return int
      */
     public function getTotalResults()

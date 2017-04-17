@@ -9,6 +9,7 @@
   "minimum-stability": "stable",
   "require": {
     "elasticsearch/elasticsearch": ">=2.0",
+    "psr/log": "~1.0",
     "php": ">=5.5.0"
   },
   "require-dev": {
