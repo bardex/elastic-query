@@ -8,7 +8,7 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "elasticsearch/elasticsearch": ">=2.0 <6.0",
+    "elasticsearch/elasticsearch": ">=2.0",
     "php": ">=5.5.0"
   },
   "require-dev": {
