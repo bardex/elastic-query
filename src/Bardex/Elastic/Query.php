@@ -398,6 +398,41 @@ class Query implements \JsonSerializable
     }
 
 
+    public function fetchRaw()
+    {
+        $this->totalResults = 0;
+
+        // build query
+        $query  = $this->getQuery();
+
+        // send query to elastic
+        $start  = microtime(1);
+
+        $result = $this->elastic->search($query);
+
+        // measure time
+        $time   = round((microtime(1) - $start) * 1000);
+
+        // total results
+        $this->totalResults = $result['hits']['total'];
+
+        // log
+        $index = $this->index . '/' . $this->type;
+        $context = [
+            'type'  => 'elastic',
+            'query' => json_encode($query),
+            'time'  => $time,
+            'index' => $index,
+            'found_rows'   => $this->totalResults,
+            'fetched_rows' => count($result['hits']['hits'])
+        ];
+
+        $this->logger->debug("Elastic query (index: $index, time: $time ms)", $context);
+
+        return $result;
+    }
+
+
     /**
      * Выполнить запрос к ES и вернуть результаты поиска.
      * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
@@ -406,31 +441,10 @@ class Query implements \JsonSerializable
      */
     public function fetchAll()
     {
-        // build query
-        $query  = $this->getQuery();
+        $result = $this->fetchRaw();
 
-        // send query to elastic
-        $start  = microtime(1);
-        $result = $this->elastic->search($query);
-        $time   = round((microtime(1) - $start) * 1000); // measure time
-
-        // extract results
-        $this->totalResults = 0;
         $results = [];
-        $result = $result['hits'];
-        $this->totalResults = $result['total']; // total results
-
-        $context = [
-            'type'  => 'elastic',
-            'query' => json_encode($query),
-            'time'  => $time,
-            'fetched_rows' => count($result['hits']),
-            'found_rows'   => $this->totalResults
-        ];
-
-        $this->logger->debug("Elastic query ($time ms)", $context);
-
-        foreach ($result['hits'] as $hit) {
+        foreach ($result['hits']['hits'] as $hit) {
             $row = $hit['_source'];
             if (isset($hit['fields'])) { // script fields
                 foreach ($hit['fields'] as $field => $data) {
