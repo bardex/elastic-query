@@ -17,9 +17,17 @@ class QueryTest extends AbstractTestCase
     {
         $query  = $this->createQuery();
         $query->where('id', 1);
-        $result = $query->fetchOne('id', 1);
+        $result = $query->fetchOne();
         $this->assertInternalType('array', $result);
+        $this->assertEquals(1, $query->getTotalResults());
+    }
 
+    public function testFetchRaw()
+    {
+        $query  = $this->createQuery();
+        $query->where('id', 1);
+        $result = $query->fetchRaw();
+        $this->assertInternalType('array', $result);
     }
 
 }
