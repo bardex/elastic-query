@@ -353,7 +353,7 @@ class Query implements \JsonSerializable
      */
     public function whereMatch($field, $text)
     {
-        if ( is_array($field) ) {
+        if (is_array($field)) {
             $this->filters[] = [
                 'multi_match' => [
                     'query'  => $text,
@@ -417,7 +417,7 @@ class Query implements \JsonSerializable
         $this->totalResults = $result['hits']['total'];
 
         // log
-        $index = $this->index . '/' . $this->type;
+        $index = $this->index.'/'.$this->type;
         $context = [
             'type'  => 'elastic',
             'query' => json_encode($query),
