@@ -127,7 +127,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         ];
 
         if ($client->indices()->exists($params)) {
-            $client->indices()->delete($params);
+            //$client->indices()->delete($params);
         }
     }
 
