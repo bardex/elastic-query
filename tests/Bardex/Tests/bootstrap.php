@@ -20,12 +20,6 @@ if ( $client->indices()->exists(['index' => $index]) ) {
 // create test index
 $params = [
     'index' => $index,
-    'body'  => [
-        'settings' => [
-            'number_of_shards'   => 5,
-            'number_of_replicas' => 0
-        ]
-    ]
 ];
 
 $client->indices()->create($params);
