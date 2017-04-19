@@ -30,6 +30,9 @@ $params = [
 
 $client->indices()->create($params);
 
+
+print_r( $client->info() );
+
 $testdata = require __DIR__ . '/testdata.php';
 
 foreach ($testdata as $data) {
@@ -40,6 +43,8 @@ foreach ($testdata as $data) {
         'body'  => $data
     ];
 }
+
+sleep(5);
 
 $params = [
         'index' => $index,
