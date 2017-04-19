@@ -13,19 +13,23 @@ $client = $builder->build();
 
 \Bardex\Tests\AbstractTestCase::setClient($client, $index, $type);
 
-if ( $client->indices()->exists(['index' => $index]) ) {
+// drop index if exists
+if ($client->indices()->exists(['index' => $index])) {
     $client->indices()->delete(['index' => $index]);
 }
 
 // create test index
 $params = [
     'index' => $index,
+    'body'  => [
+        'settings' => [
+            'number_of_shards'   => 1,
+            'number_of_replicas' => 0
+        ]
+    ]
 ];
 
 $client->indices()->create($params);
-
-
-print_r( $client->info() );
 
 $testdata = require __DIR__ . '/testdata.php';
 
@@ -36,9 +40,10 @@ foreach ($testdata as $data) {
         'id'    => $data['id'],
         'body'  => $data
     ];
+
+    $client->index($params);
 }
 
-sleep(5);
 
 $params = [
         'index' => $index,
