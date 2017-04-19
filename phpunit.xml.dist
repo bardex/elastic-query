@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/Bardex/Tests/bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -16,5 +16,7 @@
     </testsuites>
     <php>
         <env name="ELASTIC_HOST" value="localhost:9200"/>
+        <env name="ELASTIC_TEST_INDEX" value="bardex_elastic_query_test_index"/>
+        <env name="ELASTIC_TEST_TYPE" value="testdata"/>
     </php>
 </phpunit>
