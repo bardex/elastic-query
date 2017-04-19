@@ -18,6 +18,8 @@ class QueryTest extends AbstractTestCase
         $query  = $this->createQuery();
         $query->where('id', 1);
         $result = $query->fetchOne();
+        print_r($query->getQuery());
+
         $this->assertInternalType('array', $result);
         $this->assertEquals(1, $query->getTotalResults());
     }

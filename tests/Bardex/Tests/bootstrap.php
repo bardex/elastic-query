@@ -36,5 +36,5 @@ foreach ($testdata as $data) {
         'body'  => $data
     ];
 
-    $client->index($params);
+    print_r( $client->index($params) );
 }
