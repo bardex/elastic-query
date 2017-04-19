@@ -28,7 +28,7 @@ $client->indices()->create($params);
 
 $testdata = require __DIR__ . '/testdata.php';
 
-foreach ($testData as $data) {
+foreach ($testdata as $data) {
     $params = [
         'index' => $index,
         'type'  => $type,
