@@ -44,12 +44,3 @@ foreach ($testdata as $data) {
     $client->index($params);
 }
 
-
-$params = [
-        'index' => $index,
-        'type'  => $type,
-        'id'    => 1,
-    ];
-
-var_dump( $client->get($params) );
-
