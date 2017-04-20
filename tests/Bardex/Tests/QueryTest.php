@@ -15,13 +15,23 @@ class QueryTest extends AbstractTestCase
 
     public function testWhere()
     {
+
+        $params = [
+            'index' => self::$indexName,
+            'type'  => self::$typeName,
+            'id'    => 1,
+        ];
+
+        var_dump(self::$client->get($params) );
+
+
+
         $query  = $this->createQuery();
         $query->where('id', 1);
-        $result = $query->fetchOne();
+        $result = $query->fetchAll();
 
         $this->assertInternalType('array', $result);
         $this->assertEquals(1, $query->getTotalResults());
-        $this->assertEquals(1, $result['id']);
     }
 
     public function testFetchRaw()
