@@ -20,7 +20,7 @@ before_script:
 git:
   depth: 1
 
-sudo: false
+sudo: true
 
 install:
   - composer install --no-interaction
