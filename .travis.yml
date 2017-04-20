@@ -8,19 +8,24 @@ php:
 os:
   - linux
 
+jdk:
+  - oraclejdk8
+
 addons:
   apt:
     packages:
-      - oracle-java8-set-default
+        - oracle-java8-installer
 
-services:
-  - elasticsearch
+env:
+  global:
+    - JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
 
 before_install:
+  - sudo update-java-alternatives -s java-8-oracle
   - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.deb && sudo dpkg -i --force-confnew elasticsearch-5.1.1.deb && sudo service elasticsearch restart
 
 before_script:
-  - sleep 10
+  - sleep 15
 
 git:
   depth: 1
