@@ -15,17 +15,6 @@ class QueryTest extends AbstractTestCase
 
     public function testWhere()
     {
-
-        $params = [
-            'index' => self::$indexName,
-            'type'  => self::$typeName,
-            'id'    => 1,
-        ];
-
-        var_dump(self::$client->get($params) );
-
-
-
         $query  = $this->createQuery();
         $query->where('id', 1);
         $result = $query->fetchAll();
