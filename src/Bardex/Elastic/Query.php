@@ -400,7 +400,7 @@ class Query implements \JsonSerializable
 
     public function fetchRaw()
     {
-        $this->totalResults = 0;
+        $this->totalResults;
 
         // build query
         $query  = $this->getQuery();
