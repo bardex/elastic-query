@@ -11,16 +11,11 @@ class Query implements \JsonSerializable
     protected $elastic;
 
     /**
-     * имя индекса модели в ES
-     * @var string $index
+     * Параметры запроса
+     * @var array
      */
-    protected $index;
+    protected $params=[];
 
-    /**
-     * имя типа модели в ES
-     * @var string $type
-     */
-    protected $type;
 
     /**
      * параметры сортировки
@@ -28,11 +23,7 @@ class Query implements \JsonSerializable
      */
     protected $orders = [];
 
-    /**
-     * фильтры выборки
-     * @var array $filters
-     */
-    protected $filters = [];
+
 
     /**
      * сколько всего в индексе ES строк удовлетворяющих параметрам поиска
@@ -40,17 +31,6 @@ class Query implements \JsonSerializable
      */
     protected $totalResults;
 
-    /**
-     * сколько строк выбирать из индекса
-     * @var int $limit
-     */
-    protected $limit = 10;
-
-    /**
-     * сколько строк пропустить
-     * @var int $offset
-     */
-    protected $offset = 0;
 
     /**
      * Какие поля выводить
@@ -95,7 +75,7 @@ class Query implements \JsonSerializable
      */
     public function setIndex($index)
     {
-        $this->index = (string) $index;
+        $this->params['index'] = (string) $index;
         return $this;
     }
 
@@ -106,7 +86,7 @@ class Query implements \JsonSerializable
      */
     public function setType($type)
     {
-        $this->type = (string) $type;
+        $this->params['type'] = (string) $type;
         return $this;
     }
 
@@ -179,7 +159,10 @@ class Query implements \JsonSerializable
      */
     public function addFilter($type, $filter)
     {
-        $this->filters[] = [$type => $filter];
+        if ( !isset($this->params['body']['query']['bool']['must']) ) {
+            $this->params['body']['query']['bool']['must'] = [];
+        }
+        $this->params['body']['query']['bool']['must'][] = [$type => $filter];
         return $this;
     }
 
@@ -195,7 +178,7 @@ class Query implements \JsonSerializable
      */
     public function where($field, $value)
     {
-        $this->filters[] = ['term' => [$field => $value]];
+        $this->addFilter('term', [$field => $value]);
         return $this;
     }
 
@@ -213,7 +196,7 @@ class Query implements \JsonSerializable
     {
         // потому что ES не понимает дырки в ключах
         $values = array_values($values);
-        $this->filters[] = ['terms' => [$field => $values]];
+        $this->addFilter('terms', [$field => $values]);
         return $this;
     }
 
@@ -392,8 +375,8 @@ class Query implements \JsonSerializable
      */
     public function limit($limit, $offset = 0)
     {
-        $this->limit  = (int) $limit;
-        $this->offset = (int) $offset;
+        $this->params['size'] = (int) $limit;
+        $this->params['from'] = (int) $offset;
         return $this;
     }
 
@@ -417,7 +400,7 @@ class Query implements \JsonSerializable
         $this->totalResults = $result['hits']['total'];
 
         // log
-        $index = $this->index.'/'.$this->type;
+        $index = $this->params['index'].'/'.$this->params['type'];
         $context = [
             'type'  => 'elastic',
             'query' => json_encode($query),
@@ -496,19 +479,7 @@ class Query implements \JsonSerializable
      */
     public function getQuery()
     {
-        $params = [
-            'index' => $this->index,
-            'type'  => $this->type,
-            'body'  => [
-                'query'   => [
-                    'bool' => [
-                        'must' => $this->filters,
-                    ],
-                ],
-            ],
-            'size'  => $this->limit,
-            'from'  => $this->offset
-        ];
+        $params = $this->params;
 
         if ($this->orders) {
             $params['body']['sort'] = $this->orders;
