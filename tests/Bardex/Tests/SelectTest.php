@@ -4,7 +4,7 @@ namespace Bardex\Tests;
 
 use \Bardex\Elastic\Query;
 
-class QueryTest extends AbstractTestCase
+class SelectTest extends AbstractTestCase
 {
     public static function setUpBeforeClass()
     {
