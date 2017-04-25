@@ -14,7 +14,7 @@ class Query implements \JsonSerializable
      * Параметры запроса
      * @var array
      */
-    protected $params=[];
+    protected $params = [];
 
     /**
      * сколько всего в индексе ES строк удовлетворяющих параметрам поиска
@@ -131,14 +131,14 @@ class Query implements \JsonSerializable
      * Для удобства используй готовые методы фильтрации: where(), whereIn(), whereBetween(), whereMatch()
      * whereLess() и другие методы where*()
      *
-     * @param $type - тип фильтрации (term|terms|match|range)
+     * @param string $type - тип фильтрации (term|terms|match|range)
      * @param $filter - сам фильтр
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html
      * @return $this
      */
     public function addFilter($type, $filter)
     {
-        if ( !isset($this->params['body']['query']['bool']['must']) ) {
+        if (!isset($this->params['body']['query']['bool']['must'])) {
             $this->params['body']['query']['bool']['must'] = [];
         }
 
@@ -201,7 +201,7 @@ class Query implements \JsonSerializable
         if ($dateFormat) {
             $params['format'] = $dateFormat;
         }
-        $this->addFilter('range',[$field => $params]);
+        $this->addFilter('range', [$field => $params]);
         return $this;
     }
 
@@ -321,8 +321,7 @@ class Query implements \JsonSerializable
                     'query'  => $text,
                     'fields' => $field
                 ]);
-        }
-        else {
+        } else {
             $this->addFilter('match', [$field => $text]);
         }
         return $this;
@@ -431,8 +430,7 @@ class Query implements \JsonSerializable
                 foreach ($hit['fields'] as $field => $data) {
                     if (count($data) == 1) {
                         $row[$field] = array_shift($data);
-                    }
-                    else {
+                    } else {
                         $row[$field] = $data;
                     }
                 }
@@ -455,8 +453,7 @@ class Query implements \JsonSerializable
         $results = $this->fetchAll();
         if (count($results)) {
             return array_shift($results);
-        }
-        else {
+        } else {
             return null;
         }
     }
