@@ -1,4 +1,10 @@
 language: php
+
+git:
+  depth: 1
+
+sudo: true
+
 php:
   - '5.5'
   - '5.6'
@@ -15,7 +21,6 @@ addons:
   apt:
     packages:
         - oracle-java8-installer
-
 env:
   global:
     - JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre"
@@ -24,20 +29,18 @@ before_install:
   - sudo update-java-alternatives -s java-8-oracle
   - curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.1.1.deb && sudo dpkg -i --force-confnew elasticsearch-5.1.1.deb && sudo service elasticsearch restart
 
+install:
+  - composer require satooshi/php-coveralls
+  - composer install --no-interaction
+
+
 before_script:
   - sleep 15
 
-git:
-  depth: 1
 
-sudo: true
+after_script:
+  - travis_retry php vendor/bin/coveralls -v
 
-install:
-  - composer install --no-interaction
 
-notifications:
-     email:
-        on_success: always
-        on_failure: always
 
 
