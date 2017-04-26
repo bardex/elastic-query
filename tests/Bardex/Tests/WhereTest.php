@@ -98,6 +98,13 @@ class WhereTest extends AbstractTestCase
             'validCount' => 0,
             'validId'    => []
         ],
+        [
+            'name'       => 'whereBetweenDateOne',
+            'method'     => 'whereBetween',
+            'params'     => ['publicDate', '2016-12-31T00:00:00+03:00', '2017-01-02T00:00:00+03:00', 'date_time_no_millis'],
+            'validCount' => 1,
+            'validId'    => [20]
+        ],
     ];
 
     public function testInstanceOf()
