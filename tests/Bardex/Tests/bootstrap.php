@@ -44,5 +44,7 @@ foreach ($testdata as $data) {
     $client->index($params);
 }
 
+\Bardex\Tests\AbstractTestCase::setTestData($testdata);
+
 // sleep for elastic search synchronize data
-sleep(3);
+sleep(1);

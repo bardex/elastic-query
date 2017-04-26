@@ -16,6 +16,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected static $typeName;
 
+    protected static $testdata;
 
     public static function setClient(\Elasticsearch\Client $client, $index, $type)
     {
@@ -24,6 +25,35 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         self::$typeName  = $type;
     }
 
+    public static function setTestData(array $testdata)
+    {
+        self::$testdata = $testdata;
+    }
+
+    public static function getTestData()
+    {
+        return self::$testdata;
+    }
+
+    public static function getValidTestData()
+    {
+        foreach (self::$testdata as $data) {
+            if ($data['_label'] == 'VALID') {
+                return $data;
+            }
+        }
+        return null;
+    }
+
+    public static function getInvalidTestData()
+    {
+        foreach (self::$testdata as $data) {
+            if ($data['_label'] == 'INVALID') {
+                return $data;
+            }
+        }
+        return null;
+    }
 
     protected function createQuery()
     {

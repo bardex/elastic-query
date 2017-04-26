@@ -15,21 +15,15 @@ class QueryTest extends AbstractTestCase
 
     public function testWhere()
     {
+        $validData = self::getValidTestData();
+
         $query  = $this->createQuery();
-        $query->where('id', 1);
+        $query->where('id', $validData['id']);
         $result = $query->fetchOne();
 
-        $this->assertInternalType('array', $result);
+        $this->assertArraySubset($validData, $result);
         $this->assertEquals(1, $query->getTotalResults());
     }
 
-    public function testFetchRaw()
-    {
-        $query  = $this->createQuery();
-        $query->where('id', 1);
-        $result = $query->fetchRaw();
-        $this->assertInternalType('array', $result);
-        $this->assertEquals(1, $query->getTotalResults());
-    }
 
 }

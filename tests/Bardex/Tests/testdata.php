@@ -2,6 +2,7 @@
 return
 [
     [
+        '_label' => 'VALID',
         'id' => 1,
         'title' => 'first test record',
         'anons' => 'anons for first test record',
@@ -16,24 +17,12 @@ return
         ]
     ],
     [
+        '_label' => 'INVALID',
         'id' => 2,
         'title' => 'second test record',
         'anons' => 'anons for second test record',
         'channels' => [10],
         'rating'   => 1,
         'publicDate' => '2016-01-01T00:00:00+03:00',
-    ],
-    [
-        'id' => 3,
-        'title' => 'third test record',
-        'anons' => 'anons for third test record',
-        'rating'   => 3,
-        'publicDate' => '2018-01-01T00:00:00+03:00',
-        'tags' => [
-            [
-                'id' => 10,
-                'title' => 'rock'
-            ]
-        ]
     ],
 ];
