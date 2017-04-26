@@ -5,13 +5,12 @@ require __DIR__ . '/../../../vendor/autoload.php';
 // create elastic client
 $host  = getenv('ELASTIC_HOST');
 $index = getenv('ELASTIC_TEST_INDEX');
-$type  = getenv('ELASTIC_TEST_TYPE');
 
 $builder = \Elasticsearch\ClientBuilder::create();
 $builder->setHosts([$host]);
 $client = $builder->build();
 
-\Bardex\Tests\AbstractTestCase::setClient($client, $index, $type);
+\Bardex\Tests\AbstractTestCase::setClient($client, $index);
 
 // drop index if exists
 if ($client->indices()->exists(['index' => $index])) {
@@ -30,19 +29,3 @@ $params = [
 ];
 
 $client->indices()->create($params);
-
-$testdata = require __DIR__ . '/testdata.php';
-
-foreach ($testdata as $data) {
-    $params = [
-        'index' => $index,
-        'type'  => $type,
-        'id'    => $data['id'],
-        'body'  => $data
-    ];
-
-    $client->index($params);
-}
-
-// sleep for elastic search synchronize data
-sleep(3);
