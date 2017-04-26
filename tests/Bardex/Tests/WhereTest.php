@@ -77,6 +77,27 @@ class WhereTest extends AbstractTestCase
             'validCount' => 0,
             'validId'    => []
         ],
+        [
+            'name'       => 'whereBetweenOne',
+            'method'     => 'whereBetween',
+            'params'     => ['id', 15, 25],
+            'validCount' => 1,
+            'validId'    => [20]
+        ],
+        [
+            'name'       => 'whereBetweenBoth',
+            'method'     => 'whereBetween',
+            'params'     => ['id', 10, 20],
+            'validCount' => 2,
+            'validId'    => [20, 10]
+        ],
+        [
+            'name'       => 'whereBetweenNothing',
+            'method'     => 'whereBetween',
+            'params'     => ['id', 50, 60],
+            'validCount' => 0,
+            'validId'    => []
+        ],
     ];
 
     public function testInstanceOf()
