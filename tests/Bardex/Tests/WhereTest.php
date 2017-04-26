@@ -23,7 +23,7 @@ class WhereTest extends AbstractTestCase
             'id' => 10,
             'title' => 'title Bob record',
             'channels' => [1],
-            'publicDate' => '2016-01-01T00:00:00+03:00',
+            'publicDate' => '2016-12-31T23:00:00+03:00',
         ]
     ];
 
@@ -108,14 +108,14 @@ class WhereTest extends AbstractTestCase
         [
             'name'       => 'whereBetweenDateTwo',
             'method'     => 'whereBetween',
-            'params'     => ['publicDate', '2018-01-01T00:00:00+03:00', '2015-01-01T00:00:00+03:00', 'date_time_no_millis'],
+            'params'     => ['publicDate', '2016-12-31T00:00:00+03:00', '2017-01-01T00:00:00+03:00', 'date_time_no_millis'],
             'validCount' => 2,
             'validId'    => [20,10]
         ],
         [
             'name'       => 'whereBetweenDateNothing',
             'method'     => 'whereBetween',
-            'params'     => ['publicDate', '2010-01-01T00:00:00+03:00', '2011-01-01T00:00:00+03:00', 'date_time_no_millis'],
+            'params'     => ['publicDate', '2016-12-31T00:00:00+03:00', '2016-12-31T12:00:00+03:00', 'date_time_no_millis'],
             'validCount' => 0,
             'validId'    => []
         ],
