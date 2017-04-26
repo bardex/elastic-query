@@ -101,9 +101,44 @@ class WhereTest extends AbstractTestCase
         [
             'name'       => 'whereBetweenDateOne',
             'method'     => 'whereBetween',
-            'params'     => ['publicDate', '2016-12-31T00:00:00+03:00', '2017-01-02T00:00:00+03:00', 'date_time_no_millis'],
+            'params'     => ['publicDate', '2017-01-01T00:00:00+03:00', '2017-01-01T00:00:00+03:00', 'date_time_no_millis'],
             'validCount' => 1,
             'validId'    => [20]
+        ],
+        [
+            'name'       => 'whereBetweenDateTwo',
+            'method'     => 'whereBetween',
+            'params'     => ['publicDate', '2018-01-01T00:00:00+03:00', '2015-01-01T00:00:00+03:00', 'date_time_no_millis'],
+            'validCount' => 2,
+            'validId'    => [20,10]
+        ],
+        [
+            'name'       => 'whereBetweenDateNothing',
+            'method'     => 'whereBetween',
+            'params'     => ['publicDate', '2010-01-01T00:00:00+03:00', '2011-01-01T00:00:00+03:00', 'date_time_no_millis'],
+            'validCount' => 0,
+            'validId'    => []
+        ],
+        [
+            'name'       => 'whereGreaterOne',
+            'method'     => 'whereGreater',
+            'params'     => ['id', 15],
+            'validCount' => 1,
+            'validId'    => [20]
+        ],
+        [
+            'name'       => 'whereGreaterBoth',
+            'method'     => 'whereGreater',
+            'params'     => ['id', 0],
+            'validCount' => 2,
+            'validId'    => [20, 10]
+        ],
+        [
+            'name'       => 'whereGreaterNothing',
+            'method'     => 'whereGreater',
+            'params'     => ['id', 20],
+            'validCount' => 0,
+            'validId'    => []
         ],
     ];
 
