@@ -4,55 +4,40 @@ namespace Bardex\Tests;
 
 use Bardex\Elastic\Query;
 
-
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
     * @var \Elasticsearch\Client $client;
     */
     protected static $client;
-
     protected static $indexName;
-
     protected static $typeName;
-
     protected static $testdata;
 
-    public static function setClient(\Elasticsearch\Client $client, $index, $type)
+    public static function setClient(\Elasticsearch\Client $client, $index)
     {
-        self::$client    = $client;
-        self::$indexName = $index;
-        self::$typeName  = $type;
+        static::$client    = $client;
+        static::$indexName = $index;
     }
 
-    public static function setTestData(array $testdata)
+    public static function setUpBeforeClass()
     {
-        self::$testdata = $testdata;
-    }
+        parent::setUpBeforeClass();
 
-    public static function getTestData()
-    {
-        return self::$testdata;
-    }
+        static::$typeName = str_replace('\\', '_', get_called_class());
 
-    public static function getValidTestData()
-    {
-        foreach (self::$testdata as $data) {
-            if ($data['_label'] == 'VALID') {
-                return $data;
+        if ( ! empty(static::$testdata) ) {
+            foreach (static::$testdata as $data) {
+                $params = [
+                    'index' => static::$indexName,
+                    'type'  => static::$typeName,
+                    'id'    => $data['id'],
+                    'body'  => $data
+                ];
+                static::$client->index($params);
             }
+            static::$client->indices()->refresh(['index' => static::$indexName]);
         }
-        return null;
-    }
-
-    public static function getInvalidTestData()
-    {
-        foreach (self::$testdata as $data) {
-            if ($data['_label'] == 'INVALID') {
-                return $data;
-            }
-        }
-        return null;
     }
 
     protected function createQuery()

@@ -17,6 +17,5 @@
     <php>
         <env name="ELASTIC_HOST" value="localhost:9200"/>
         <env name="ELASTIC_TEST_INDEX" value="bardex_elastic_query_test_index"/>
-        <env name="ELASTIC_TEST_TYPE" value="testdata"/>
     </php>
 </phpunit>
