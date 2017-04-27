@@ -12,7 +12,6 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected static $client;
     protected static $indexName;
     protected static $typeName;
-    protected static $testdata;
 
     public static function setClient(\Elasticsearch\Client $client, $index)
     {
@@ -20,24 +19,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         static::$indexName = $index;
     }
 
-    public static function setUpBeforeClass()
+    public static function setupTestData($type, $testdata)
     {
-        parent::setUpBeforeClass();
-
-        static::$typeName = str_replace('\\', '_', get_called_class());
-
-        if ( ! empty(static::$testdata) ) {
-            foreach (static::$testdata as $data) {
-                $params = [
-                    'index' => static::$indexName,
-                    'type'  => static::$typeName,
-                    'id'    => $data['id'],
-                    'body'  => $data
-                ];
-                static::$client->index($params);
-            }
-            static::$client->indices()->refresh(['index' => static::$indexName]);
+        foreach ($testdata as $data) {
+            $params = [
+                'index' => static::$indexName,
+                'type'  => $type,
+                'id'    => $data['id'],
+                'body'  => $data
+            ];
+            static::$client->index($params);
         }
+        static::$client->indices()->refresh(['index' => static::$indexName]);
     }
 
     protected function createQuery()

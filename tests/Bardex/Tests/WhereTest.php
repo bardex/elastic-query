@@ -6,6 +6,8 @@ use \Bardex\Elastic\Query;
 
 class WhereTest extends AbstractTestCase
 {
+    protected static $typeName = 'where_test';
+
     protected static $testdata = [
         [
             'id' => 20,
@@ -141,6 +143,13 @@ class WhereTest extends AbstractTestCase
             'validId'    => []
         ],
     ];
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::setupTestData(static::$typeName, static::$testdata);
+    }
+
 
     public function testInstanceOf()
     {
