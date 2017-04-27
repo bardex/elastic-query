@@ -28,7 +28,7 @@ class MultiQuery
      * @param Query $query
      * @return $this
      */
-    public function addQuery( Query $query ) {
+    public function addQuery(Query $query) {
         $this->queryList[] = $query;
         return $this;
     }
