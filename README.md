@@ -29,5 +29,5 @@ $q->setIndex('products')
 $results = $q->fetchAll();
 $total   = $q->getTotalResults();
 ```
-##API documentation
+## API documentation
 [https://bardex.github.io/elastic-query/](https://bardex.github.io/elastic-query/)
