@@ -3,6 +3,10 @@
 namespace Bardex\Elastic;
 
 
+/**
+ * Fluent interface for elasticsearch
+ * @package Bardex\Elastic
+ */
 class Query implements \JsonSerializable
 {
     /**
@@ -28,14 +32,22 @@ class Query implements \JsonSerializable
      */
     protected $logger;
 
-
+    /**
+     * Конструктор
+     * @param \Elasticsearch\Client $elastic
+     * @return self $this
+     */
     public function __construct(\Elasticsearch\Client $elastic)
     {
         $this->elastic = $elastic;
         $this->logger = new \Psr\Log\NullLogger;
     }
 
-
+    /**
+     * Добавить Psr-совместимый логгер
+     * @param \Psr\Log\LoggerInterface $logger
+     * @return self $this
+     */
     public function setLogger(\Psr\Log\LoggerInterface $logger)
     {
         $this->logger = $logger;
@@ -46,7 +58,7 @@ class Query implements \JsonSerializable
     /**
      * Установить имя индекса для поиска
      * @param $index
-     * @return $this
+     * @return self $this
      */
     public function setIndex($index)
     {
@@ -58,7 +70,7 @@ class Query implements \JsonSerializable
     /**
      * Установить имя типа для поиска
      * @param $type
-     * @return $this
+     * @return self $this
      */
     public function setType($type)
     {
@@ -72,8 +84,8 @@ class Query implements \JsonSerializable
      * (не обязательный метод, по-умолчанию, выводятся все)
      * Методы select() и exclude() могут работать совместно.
      * @param array $fields
-     * @return $this;
-     * @example $q->select(['id', 'title', 'brand.id', 'brand.title']);
+     * @return self $this;
+     * @example $query->select(['id', 'title', 'brand.id', 'brand.title']);
      */
     public function select(array $fields)
     {
@@ -84,15 +96,13 @@ class Query implements \JsonSerializable
 
     /**
      * Добавить в результаты вычисляемое поле, на скриптовом языке painless или groovy
-     * ```
-     * $q->addScriptField('pricefactor', 'return doc["product.price"].value * params.factor', ['factor' => 2]);
-     * ```
      * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
      * @param string $fieldName - имя поля в результатах (если такое поле уже есть в документе, то оно будет заменено)
      * @param string $script - текст скрипта
      * @param array $params - параметры которые нужно передать в скрипт
      * @param string $lang - язык скрипта painless или groovy
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html
+     * @example $query->addScriptField('pricefactor', 'return doc["product.price"].value * params.factor', ['factor' => 2]);
      * @return self $this
      */
     public function addScriptField($fieldName, $script, array $params = null, $lang = 'painless')
@@ -116,8 +126,8 @@ class Query implements \JsonSerializable
      * (не обязательный метод, по-умолчанию, выводятся все)
      * Методы select() и exclude() могут работать совместно.
      * @param array $fields
-     * @return $this;
-     * @example $q->exclude(['anons', '*.anons']);
+     * @return self $this;
+     * @example $query->exclude(['anons', '*.anons']);
      */
     public function exclude(array $fields)
     {
@@ -132,30 +142,27 @@ class Query implements \JsonSerializable
      * whereLess() и другие методы where*()
      *
      * @param string $type - тип фильтрации (term|terms|match|range)
-     * @param $filter - сам фильтр
+     * @param $filter - фильтр
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html
-     * @return $this
+     * @return self $this
      */
     public function addFilter($type, $filter)
     {
         if (!isset($this->params['body']['query']['bool']['must'])) {
             $this->params['body']['query']['bool']['must'] = [];
         }
-
         $this->params['body']['query']['bool']['must'][] = [$type => $filter];
-
         return $this;
     }
 
 
     /**
-     * Добавить фильтр ТОЧНОГО совпадения,
-     * этот фильтр не влияет на поле релевантности _score.
+     * Добавить фильтр точного совпадения, этот фильтр не влияет на поле релевантности _score.
      *
      * @param $field - поле по которому фильтруем (id, page.categoryId...)
      * @param $value - искомое значение
-     * @example $q->where('channel', 1)->where('page.categoryId', 10);
-     * @return $this;
+     * @example $query->where('channel', 1)->where('page.categoryId', 10);
+     * @return self $this;
      */
     public function where($field, $value)
     {
@@ -165,13 +172,12 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Добавить фильтр совпадения хотя бы одного значения из набора,
-     * этот фильтр не влияет на поле релевантности _score.
+     * Добавить фильтр совпадения хотя бы одного значения из набора, этот фильтр не влияет на поле релевантности _score.
      *
      * @param $field - поле по которому фильтруем
      * @param $values - массив допустимых значений
-     * @example $q->whereIn('channel', [1,2,3])->whereIn('page.categoryId', [10,11]);
-     * @return $this;
+     * @example $query->whereIn('channel', [1,2,3])->whereIn('page.categoryId', [10,11]);
+     * @return self $this;
      */
     public function whereIn($field, array $values)
     {
@@ -183,17 +189,17 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Добавить фильтр вхождения значение в диапазон (обе границы включительно)
-     * Можно искать по диапазону дат
-     * этот фильтр не влияет на поле релевантности _score.
+     * Добавить фильтр вхождения значение в диапазон (обе границы включительно).
+     * Можно искать по диапазону дат.
+     * Этот фильтр не влияет на поле релевантности _score.
      *
      * @param $field - поле, по которому фильтруем
      * @param $min - нижняя граница диапазона (включительно)
      * @param $max - верхняя граница диапазона (включительно)
      * @param $dateFormat - необязательное поле описание формата даты
-     * @example $q->whereBetween('created', '01/01/2010','01/01/2011', 'dd/MM/yyyy');
+     * @example $q->whereBetween('created', '01/01/2010', '01/01/2011', 'dd/MM/yyyy');
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html
-     * @return $this;
+     * @return self $this;
      */
     public function whereBetween($field, $min, $max, $dateFormat = null)
     {
@@ -207,18 +213,16 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Добавить в фильтр сложное условие с вычислениями, на скриптовом языке painless или groovy
-     * ```
-     *  $q->whereScript('doc["id"].value == params.id', ['id' => 5169]);
-     * ```
-     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов
+     * Добавить в фильтр сложное условие с вычислениями, на скриптовом языке painless или groovy.
+     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
      *
-     * @param string $script - строка скрипта
-     * @param array $params - параматеры для скрипта
+     * @param string $script - скрипт
+     * @param array $params - параметры передаваемые в скрипт
      * @param string $lang - язык painless или groovy
      * @return self $this;
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html
+     * @example $query->whereScript('doc["id"].value == params.id', ['id' => 5169]);
      */
     public function whereScript($script, array $params = null, $lang = 'painless')
     {
@@ -237,11 +241,14 @@ class Query implements \JsonSerializable
 
 
     /**
-     * добавить фильтр "больше или равно"
-     * @param $field
-     * @param $value
-     * @param null $dateFormat
-     * @return $this
+     * Добавить фильтр "больше или равно"
+     * @param $field - поле
+     * @param $value - значение
+     * @param null $dateFormat - необязательный формат даты
+     * @return self $this
+     * @example $query->whereGreaterOrEqual("price", 100)
+     * @example $query->whereGreaterOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
+     * @example $query->whereGreaterOrEqual("seller.rating", 4)
      */
     public function whereGreaterOrEqual($field, $value, $dateFormat = null)
     {
@@ -254,11 +261,14 @@ class Query implements \JsonSerializable
     }
 
     /**
-     * добавить фильтр "больше чем"
-     * @param $field
-     * @param $value
-     * @param null $dateFormat
-     * @return $this
+     * Добавить фильтр "больше чем"
+     * @param $field - поле
+     * @param $value - значение
+     * @param null $dateFormat - необязательный формат даты
+     * @return self $this
+     * @example $query->whereGreater("price", 100)
+     * @example $query->whereGreater("created", "31/12/2016" , "dd/MM/yyyy")
+     * @example $query->whereGreater("seller.rating", 4)
      */
     public function whereGreater($field, $value, $dateFormat = null)
     {
@@ -271,11 +281,14 @@ class Query implements \JsonSerializable
     }
 
     /**
-     * добавить фильтр "меньше или равно"
-     * @param $field
-     * @param $value
-     * @param null $dateFormat
-     * @return $this
+     * Добавить фильтр "меньше или равно"
+     * @param $field - поле
+     * @param $value - значение
+     * @param null $dateFormat - необязательный формат даты
+     * @return self $this
+     * @example $query->whereLessOrEqual("price", 100)
+     * @example $query->whereLessOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
+     * @example $query->whereLessOrEqual("seller.rating", 4)
      */
     public function whereLessOrEqual($field, $value, $dateFormat = null)
     {
@@ -287,12 +300,16 @@ class Query implements \JsonSerializable
         return $this;
     }
 
+
     /**
-     * добавить фильтр "меньше чем"
-     * @param $field
-     * @param $value
-     * @param null $dateFormat
-     * @return $this
+     * Добавить фильтр "меньше чем"
+     * @param $field - поле
+     * @param $value - значение
+     * @param null $dateFormat - - необязательный формат даты
+     * @return self $this
+     * @example $query->whereLess("price", 100)
+     * @example $query->whereLess("created", "31/12/2016" , "dd/MM/yyyy")
+     * @example $query->whereLess("seller.rating", 4)
      */
     public function whereLess($field, $value, $dateFormat = null)
     {
@@ -306,13 +323,13 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Добавить фильтр полнотекстового поиска
-     * этот фильтр влияет на поле релевантности _score.
+     * Добавить фильтр полнотекстового поиска, этот фильтр влияет на поле релевантности _score.
      *
-     * @param $field - поле по которому фильтруем
+     * @param string|arary $field - поле (или массив полей) по которому ищем
      * @param $text - поисковая фраза
-     * @example $q->whereMatch('title', 'яблочная слойка')->setOrderBy('_score', 'desc');
-     * @return $this;
+     * @example $query->whereMatch('title', 'яблочная слойка')->setOrderBy('_score', 'desc');
+     * @example $query->whereMatch(['title', 'anons'], 'яблочная слойка')->setOrderBy('_score', 'desc');
+     * @return self $this;
      */
     public function whereMatch($field, $text)
     {
@@ -327,14 +344,29 @@ class Query implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * Установить поле сортировки.
+     * Для сортировки по релевантности существует псевдополе _score (значение больше - релевантность лучше)
+     * @param $field - поле сортировки
+     * @param string $order - направление сортировки asc|desc
+     * @example $query->setOrderBy('_score', 'desc');
+     * @return self $this
+     */
+    public function setOrderBy($field, $order = 'asc')
+    {
+        $this->params['body']['sort'] = [];
+        $this->addOrderBy($field, $order);
+        return $this;
+    }
 
     /**
      * Добавить поле сортировки.
      * Для сортировки по релевантности существует псевдополе _score (значение больше - релевантность лучше)
      * @param $field - поле сортировки
      * @param string $order - направление сортировки asc|desc
-     * @example $q->addOrderBy('_score', 'desc');
-     * @return $this
+     * @example $query->addOrderBy('_score', 'desc');
+     * @example $query->addOrderBy('seller.rating', 'desc');
+     * @return self $this
      */
     public function addOrderBy($field, $order = 'asc')
     {
@@ -349,26 +381,10 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Установить поле сортировки.
-     * Для сортировки по релевантности существует псевдополе _score (значение больше - релевантность лучше)
-     * @param $field - поле сортировки
-     * @param string $order - направление сортировки asc|desc
-     * @example $q->setOrderBy('_score', 'desc');
-     * @return $this
-     */
-    public function setOrderBy($field, $order = 'asc')
-    {
-        $this->params['body']['sort'] = [];
-        $this->addOrderBy($field, $order);
-        return $this;
-    }
-
-
-    /**
      * Установить лимиты выборки
      * @param $limit - сколько строк выбирать
      * @param int $offset - сколько строк пропустить
-     * @return $this;
+     * @return self $this;
      */
     public function limit($limit, $offset = 0)
     {
@@ -378,6 +394,12 @@ class Query implements \JsonSerializable
     }
 
 
+    /**
+     * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
+     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
+     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
+     * @return array возвращает необработанный ответ ES
+     */
     public function fetchRaw()
     {
         $this->totalResults;
@@ -461,7 +483,7 @@ class Query implements \JsonSerializable
 
     /**
      * Количество документов всего найденных в индексе, для последнего запроса.
-     * @return int
+     * @return integer количество найденных документов
      */
     public function getTotalResults()
     {
@@ -470,7 +492,7 @@ class Query implements \JsonSerializable
 
 
     /**
-     * Собрать запрос
+     * Получить собранный запрос
      * @return array
      */
     public function getQuery()
@@ -484,7 +506,10 @@ class Query implements \JsonSerializable
         return $params;
     }
 
-
+    /**
+     * Имплементация \JsonSerializable
+     * @return array
+     */
     public function jsonSerialize() {
         return $this->getQuery();
     }
