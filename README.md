@@ -4,7 +4,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bardex/elastic-query/badges/quality-score.png?b=devel)](https://scrutinizer-ci.com/g/bardex/elastic-query/?branch=devel)
 [![Coverage Status](https://coveralls.io/repos/github/bardex/elastic-query/badge.svg?branch=devel)](https://coveralls.io/github/bardex/elastic-query?branch=devel)
 
-## Examples
+## Example
 
 ### DEVEL
 
