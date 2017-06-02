@@ -105,15 +105,15 @@ class Query implements \JsonSerializable
      * @example $query->addScriptField('pricefactor', 'return doc["product.price"].value * params.factor', ['factor' => 2]);
      * @return self $this
      */
-    public function addScriptField($fieldName, $script, array $params = null, $lang = 'painless')
+    public function addScriptField($fieldName, Script $script)
     {
         $item = [
             'script' => [
-                'lang'   => $lang,
-                'inline' => $script,
+                'lang'   => $script->getLanguage(),
+                'inline' => $script->getBody(),
             ]
         ];
-        if ($params) {
+        if ($params = $script->getParams()) {
             $item['script']['params'] = $params;
         }
         $this->params['body']['script_fields'][$fieldName] = $item;
