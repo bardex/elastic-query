@@ -46,11 +46,8 @@ class ScriptTest extends AbstractTestCase
             $script->addParam($paramName, $paramValue);
         }
 
-
         $this->assertEquals($lang, $script->getLanguage());
-
         $this->assertEquals($params, $script->getParams());
-
         $this->assertEquals(implode($lineSeparator, $lines), $script->getBody());
     }
 
@@ -58,22 +55,45 @@ class ScriptTest extends AbstractTestCase
     public function testScriptFields()
     {
         $script = new Script();
-        $script->addLine('return 100;');
+        $script->addLine('def a = 100;');
+        $script->addLine('return a;');
 
         $query = $this->createQuery();
         $query->addScriptField('test', $script);
 
         $queryBody = $query->getQuery();
-
-        print_r($queryBody);
-
+        $this->assertTrue(isset($queryBody['body']['script_fields']['test']));
 
         $row = $query->fetchOne();
-
-        print_r($row);
-
-
         $this->assertEquals(100, $row['test']);
     }
+
+    public function testScriptFieldsWithParams()
+    {
+        $script = new Script();
+        $script->addLine('return 10 * params.power;');
+        $script->addParam('power', 2);
+
+        $query = $this->createQuery();
+        $query->addScriptField('test', $script);
+
+        $row = $query->fetchOne();
+        $this->assertEquals(20, $row['test']);
+    }
+
+    public function testWhereScript()
+    {
+        $script = new Script();
+        $script->addLine("return doc['id'].value == params.test");
+        $script->addParam('test', 10);
+
+        $query = $this->createQuery();
+        $query->whereScript($script);
+
+        $rows = $query->fetchAll();
+        $this->assertEquals(1, count($rows));
+        $this->assertEquals(10, $rows[0]['id']);
+    }
+
 
 }

@@ -202,26 +202,14 @@ class Query implements \JsonSerializable
      * Добавить в фильтр сложное условие с вычислениями, на скриптовом языке painless или groovy.
      * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
      *
-     * @param string $script - скрипт
-     * @param array $params - параметры передаваемые в скрипт
-     * @param string $lang - язык painless или groovy
+     * @param Script $script - скрипт
      * @return self $this;
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html
-     * @example $query->whereScript('doc["id"].value == params.id', ['id' => 5169]);
      */
-    public function whereScript($script, array $params = null, $lang = 'painless')
+    public function whereScript(Script $script)
     {
-        $item = [
-            'script' => [
-                'inline' => $script,
-                'lang'   => $lang
-            ]
-        ];
-        if ($params) {
-            $item['script']['params'] = $params;
-        }
-        $this->addFilter('script', $item);
+        $this->addFilter('script', $script->compile());
         return $this;
     }
 
