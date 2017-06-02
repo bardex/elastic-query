@@ -98,11 +98,8 @@ class Query implements \JsonSerializable
      * Добавить в результаты вычисляемое поле, на скриптовом языке painless или groovy
      * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
      * @param string $fieldName - имя поля в результатах (если такое поле уже есть в документе, то оно будет заменено)
-     * @param string $script - текст скрипта
-     * @param array $params - параметры которые нужно передать в скрипт
-     * @param string $lang - язык скрипта painless или groovy
+     * @param Script $script - скрипт
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html
-     * @example $query->addScriptField('pricefactor', 'return doc["product.price"].value * params.factor', ['factor' => 2]);
      * @return self $this
      */
     public function addScriptField($fieldName, Script $script)
@@ -111,11 +108,9 @@ class Query implements \JsonSerializable
             'script' => [
                 'lang'   => $script->getLanguage(),
                 'inline' => $script->getBody(),
+                'params' => $script->getParams()
             ]
         ];
-        if ($params = $script->getParams()) {
-            $item['script']['params'] = $params;
-        }
         $this->params['body']['script_fields'][$fieldName] = $item;
         return $this;
     }

@@ -38,4 +38,20 @@ class ScriptTest extends AbstractTestCase
 
         $this->assertEquals(implode($lineSeparator, $lines), $script->getBody());
     }
+
+
+    public function testScriptFields()
+    {
+        $example = 100;
+        $script = new Script();
+        $script->addLine("def test = $example;");
+        $script->addLine('return test;');
+
+        $query = $this->createQuery();
+        $query->addScriptField('test', $script);
+        $row = $query->fetchOne();
+
+        $this->assertEquals($example, $row['test']);
+    }
+
 }
