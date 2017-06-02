@@ -388,8 +388,8 @@ class Query implements \JsonSerializable
      */
     public function limit($limit, $offset = 0)
     {
-        $this->params['size'] = (int) $limit;
-        $this->params['from'] = (int) $offset;
+        $this->params['body']['size'] = (int) $limit;
+        $this->params['body']['from'] = (int) $offset;
         return $this;
     }
 
