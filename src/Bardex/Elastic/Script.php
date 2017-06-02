@@ -21,6 +21,11 @@ class Script
     protected $lines = [];
 
     /**
+     * @var string разделитель строк в теле скрипта
+     */
+    protected $lineSeparator = "\n";
+
+    /**
      * Создать новый скрипт
      * @param string $language=painless
      */
@@ -28,6 +33,19 @@ class Script
     {
         $this->language = $language;
     }
+
+
+    /**
+     * Установить разделитель строк в теле скрипта
+     * @param string $lineSeparator
+     * @return self $this
+     */
+    public function setLineSeparator($lineSeparator)
+    {
+        $this->lineSeparator = $lineSeparator;
+        return $this;
+    }
+
 
     /**
      * Добавить строку в тело скрипта
@@ -58,7 +76,7 @@ class Script
      */
     public function getBody()
     {
-        $body = implode("\n", $this->lines);
+        $body = implode($this->lineSeparator, $this->lines);
         return $body;
     }
 

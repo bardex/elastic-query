@@ -9,19 +9,33 @@ class ScriptTest extends AbstractTestCase
 {
     public function testScriptCompile()
     {
-        $script = new Script();
-        $script->addLine('def a=10;');
-        $script->addLine('return a * params.power;');
-        $script->addParam('power', 10);
+        $lang = 'groovy';
+        $lineSeparator = " ";
 
-        $body   = $script->getBody();
-        $params = $script->getParams();
+        $lines = [];
+        $lines[] = 'def A = 10;';
+        $lines[] = 'def B = 20;';
+        $lines[] = 'return params.power * (A + B);';
+
+        $params = [];
+        $params['power'] = 2;
+
+        $script = new Script($lang);
+        $script->setLineSeparator($lineSeparator);
+
+        foreach ($lines as $line) {
+            $script->addLine($line);
+        }
+
+        foreach ($params as $paramName => $paramValue) {
+            $script->addParam($paramName, $paramValue);
+        }
 
 
+        $this->assertEquals($lang, $script->getLanguage());
 
+        $this->assertEquals($params, $script->getParams());
+
+        $this->assertEquals(implode($lineSeparator, $lines), $script->getBody());
     }
-
-
-
-
 }
