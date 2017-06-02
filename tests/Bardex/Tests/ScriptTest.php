@@ -42,16 +42,23 @@ class ScriptTest extends AbstractTestCase
 
     public function testScriptFields()
     {
-        $example = 100;
         $script = new Script();
-        $script->addLine("def test = $example;");
-        $script->addLine('return test;');
+        $script->addLine('return 100;');
 
         $query = $this->createQuery();
         $query->addScriptField('test', $script);
+
+        $queryBody = $query->getQuery();
+
+        print_r($queryBody);
+
+
         $row = $query->fetchOne();
 
-        $this->assertEquals($example, $row['test']);
+        print_r($row);
+
+
+        $this->assertEquals(100, $row['test']);
     }
 
 }
