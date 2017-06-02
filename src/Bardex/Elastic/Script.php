@@ -71,6 +71,26 @@ class Script
     }
 
     /**
+     * Скомпилировать скрипт в elastic-query тип
+     * @return array
+     */
+    public function compile()
+    {
+        $script = [
+            'script' => [
+                'lang'   => $this->getLanguage(),
+                'inline' => $this->getBody(),
+                'params' => $this->getParams()
+            ]
+        ];
+
+        // because ES
+        if (empty($script['script']['params'])) unset($script['script']['params']);
+
+        return $script;
+    }
+
+    /**
      * Скомпилировать тело скрипта
      * @return string
      */
@@ -97,5 +117,4 @@ class Script
     {
         return $this->language;
     }
-
 }

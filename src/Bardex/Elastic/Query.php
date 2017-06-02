@@ -35,7 +35,6 @@ class Query implements \JsonSerializable
     /**
      * Конструктор
      * @param \Elasticsearch\Client $elastic
-     * @return self $this
      */
     public function __construct(\Elasticsearch\Client $elastic)
     {
@@ -96,7 +95,6 @@ class Query implements \JsonSerializable
 
     /**
      * Добавить в результаты вычисляемое поле, на скриптовом языке painless или groovy
-     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
      * @param string $fieldName - имя поля в результатах (если такое поле уже есть в документе, то оно будет заменено)
      * @param Script $script - скрипт
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html
@@ -104,14 +102,7 @@ class Query implements \JsonSerializable
      */
     public function addScriptField($fieldName, Script $script)
     {
-        $item = [
-            'script' => [
-                'lang'   => $script->getLanguage(),
-                'inline' => $script->getBody(),
-                'params' => $script->getParams()
-            ]
-        ];
-        $this->params['body']['script_fields'][$fieldName] = $item;
+        $this->params['body']['script_fields'][$fieldName] = $script->compile();
         return $this;
     }
 
