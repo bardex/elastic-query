@@ -7,6 +7,21 @@ use \Bardex\Elastic\Script;
 
 class ScriptTest extends AbstractTestCase
 {
+    protected static $testdata = [
+        [
+            'id' => 20,
+            'title' => 'title Alice record',
+            'channels' => [1,2,3],
+            'publicDate' => '2017-01-01T00:00:00+03:00',
+        ],
+        [
+            'id' => 10,
+            'title' => 'title Bob record',
+            'channels' => [1],
+            'publicDate' => '2016-12-31T23:00:00+03:00',
+        ]
+    ];
+
     public function testScriptCompile()
     {
         $lang = 'groovy';
