@@ -7,7 +7,11 @@ use Elasticsearch\Client as ElasticClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-
+/**
+ * Class Query
+ * @package Bardex\Elastic
+ * @author Alexey Sumin <bardex@ya.ru>
+ */
 abstract class Query implements \JsonSerializable
 {
     /**
@@ -74,6 +78,21 @@ abstract class Query implements \JsonSerializable
             }
         }
         return $results;
+    }
+
+
+    /**
+     * Выбрать из ответа ES-сервера количество найденных документов.
+     * @param array $response - ответ ES сервера.
+     * @return integer - возвращает количество найденных документов.
+     */
+    public function extractTotal(array $response)
+    {
+        $total = 0;
+        if (isset($response['hits']['total'])) {
+            $total = $response['hits']['total'];
+        }
+        return $total;
     }
 
 

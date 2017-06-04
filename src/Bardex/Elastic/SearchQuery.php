@@ -2,9 +2,11 @@
 
 namespace Bardex\Elastic;
 
+use Bardex\Elastic\SearchResult;
+
 
 /**
- * Fluent interface for elasticsearch
+ * Fluent interface for ElasticSearch
  * @package Bardex\Elastic
  */
 class SearchQuery extends Query
@@ -347,27 +349,23 @@ class SearchQuery extends Query
 
     /**
      * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
      * @return array возвращает необработанный ответ ES
      */
     public function fetchRaw()
     {
-        $this->totalResults;
-
         // build query
         $query  = $this->getQuery();
 
-        // send query to elastic
         $start  = microtime(1);
 
+        // send query to elastic
         $result = $this->elastic->search($query);
 
         // measure time
         $time   = round((microtime(1) - $start) * 1000);
 
         // total results
-        $this->totalResults = $result['hits']['total'];
+        $totalResults = $result['hits']['total'];
 
         // log
         $index = $this->params['index'].'/'.$this->params['type'];
@@ -376,7 +374,7 @@ class SearchQuery extends Query
             'query' => json_encode($query),
             'time'  => $time,
             'index' => $index,
-            'found_rows'   => $this->totalResults,
+            'found_rows'   => $totalResults,
             'fetched_rows' => count($result['hits']['hits'])
         ];
 
@@ -388,41 +386,15 @@ class SearchQuery extends Query
 
     /**
      * Выполнить запрос к ES и вернуть результаты поиска.
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
-     * @return array - возвращает набор документов
+     * @return SearchResult - возвращает набор документов
      */
     public function fetchAll()
     {
-        $docs = $this->extractDocuments($this->fetchRaw());
-        return $docs;
-    }
-
-
-    /**
-     * Выполнить запрос к ES и вернуть первый результат.
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
-     * @return array|null возращает первый найденный документ или null.
-     */
-    public function fetchOne()
-    {
-        $results = $this->fetchAll();
-        if (count($results)) {
-            return array_shift($results);
-        } else {
-            return null;
-        }
-    }
-
-
-    /**
-     * Количество документов всего найденных в индексе, для последнего запроса.
-     * @return integer количество найденных документов
-     */
-    public function getTotalResults()
-    {
-        return $this->totalResults;
+        $response = $this->fetchRaw();
+        $results  = $this->extractDocuments($response);
+        $total    = $this->extractTotal($response);
+        $searchResult = new SearchResult($results, $total);
+        return $searchResult;
     }
 
 }

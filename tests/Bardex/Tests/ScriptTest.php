@@ -64,7 +64,7 @@ class ScriptTest extends AbstractTestCase
         $queryBody = $query->getQuery();
         $this->assertTrue(isset($queryBody['body']['script_fields']['test']));
 
-        $row = $query->fetchOne();
+        $row = $query->fetchAll()->getFirst();
         $this->assertEquals(100, $row['test']);
     }
 
@@ -77,7 +77,7 @@ class ScriptTest extends AbstractTestCase
         $query = $this->createQuery();
         $query->addScriptField('test', $script);
 
-        $row = $query->fetchOne();
+        $row = $query->fetchAll()->getFirst();
         $this->assertEquals(20, $row['test']);
     }
 
