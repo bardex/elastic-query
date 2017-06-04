@@ -4,6 +4,7 @@ namespace Bardex\Tests;
 
 use \Bardex\Elastic\SearchQuery;
 
+
 class WhereTest extends AbstractTestCase
 {
     protected static $testdata = [
@@ -156,7 +157,7 @@ class WhereTest extends AbstractTestCase
             $results = $query->fetchAll();
 
             $this->assertCount($test['validCount'], $results, "test: ".$test['name']);
-            $this->assertEquals($test['validCount'], $query->getTotalResults(), "test: ".$test['name']);
+            $this->assertEquals($test['validCount'], $results->getTotalCount(), "test: ".$test['name']);
             foreach ($results as $result) {
                 $this->assertContains($result['id'], $test['validId'], "test: ".$test['name']);
             }
