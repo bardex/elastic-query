@@ -2,7 +2,7 @@
 
 namespace Bardex\Tests;
 
-use \Bardex\Elastic\Query;
+use \Bardex\Elastic\SearchQuery;
 use \Bardex\Elastic\Script;
 
 class ScriptTest extends AbstractTestCase

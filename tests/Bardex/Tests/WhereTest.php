@@ -2,7 +2,7 @@
 
 namespace Bardex\Tests;
 
-use \Bardex\Elastic\Query;
+use \Bardex\Elastic\SearchQuery;
 
 class WhereTest extends AbstractTestCase
 {
@@ -145,7 +145,7 @@ class WhereTest extends AbstractTestCase
     public function testInstanceOf()
     {
         $query = $this->createQuery();
-        $this->assertInstanceOf(Query::class, $query);
+        $this->assertInstanceOf(SearchQuery::class, $query);
     }
 
     public function testWhereMethods()
