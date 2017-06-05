@@ -3,6 +3,7 @@
 namespace Bardex\Tests;
 
 use \Bardex\Elastic\SearchQuery;
+use Bardex\Elastic\SearchResult;
 
 
 class WhereTest extends AbstractTestCase
@@ -155,6 +156,8 @@ class WhereTest extends AbstractTestCase
             $query = $this->createQuery();
             call_user_func_array([$query, $test['method']], $test['params']);
             $results = $query->fetchAll();
+
+            $this->assertInstanceOf(SearchResult::class, $results);
 
             $this->assertCount($test['validCount'], $results, "test: ".$test['name']);
             $this->assertEquals($test['validCount'], $results->getTotalCount(), "test: ".$test['name']);

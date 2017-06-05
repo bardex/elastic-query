@@ -15,10 +15,10 @@ use Psr\Log\NullLogger;
 abstract class Query implements \JsonSerializable
 {
     /**
-     * Логгер
      * @var LoggerInterface $logger
      */
     protected $logger;
+
     /**
      * @var ElasticClient $client
      */
@@ -29,6 +29,14 @@ abstract class Query implements \JsonSerializable
      * @return array
      */
     abstract public function getQuery();
+
+
+    /**
+     * Отправить запрос на конкретный endpoint elasticsearch-сервера
+     * @param array $query
+     * @return array
+     */
+    abstract protected function executeQuery(array $query);
 
 
     /**
@@ -45,7 +53,7 @@ abstract class Query implements \JsonSerializable
     /**
      * Добавить Psr-совместимый логгер
      * @param LoggerInterface $logger
-     * @return SearchQuery $this
+     * @return Query $this
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -55,11 +63,57 @@ abstract class Query implements \JsonSerializable
 
 
     /**
+     * Выполнить запрос к ES и вернуть результаты поиска.
+     * @return SearchResult - возвращает набор документов
+     */
+    public function fetchAll()
+    {
+        $response = $this->fetchRaw();
+        $result = $this->createSearchResult($response);
+        return $result;
+    }
+
+
+    /**
+     * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
+     * @return array возвращает необработанный ответ ES
+     */
+    public function fetchRaw()
+    {
+        // build query
+        $query = $this->getQuery();
+
+        $start = microtime(1);
+
+        // send query to elastic
+        $result = $this->executeQuery($query);
+
+        // measure time
+        $time = round((microtime(1) - $start) * 1000);
+
+        return $result;
+    }
+
+
+    /**
+     * Создать из ответа ES-сервера экземляр SearchResult
+     * @param array $response
+     * @return SearchResult
+     */
+    protected function createSearchResult(array $response)
+    {
+        $results  = $this->extractDocuments($response);
+        $total    = $this->extractTotal($response);
+        $searchResult = new SearchResult($results, $total);
+        return $searchResult;
+    }
+
+    /**
      * Выбрать документы из ответа ES-сервера и добавить script fields.
      * @param array $response - ответ ES сервера.
      * @return array - возвращает набор документов
      */
-    public function extractDocuments(array $response)
+    protected function extractDocuments(array $response)
     {
         $results = [];
         if (isset($response['hits']['hits'])) {
@@ -86,7 +140,7 @@ abstract class Query implements \JsonSerializable
      * @param array $response - ответ ES сервера.
      * @return integer - возвращает количество найденных документов.
      */
-    public function extractTotal(array $response)
+    protected function extractTotal(array $response)
     {
         $total = 0;
         if (isset($response['hits']['total'])) {

@@ -346,55 +346,10 @@ class SearchQuery extends Query
         return $params;
     }
 
-
-    /**
-     * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
-     * @return array возвращает необработанный ответ ES
-     */
-    public function fetchRaw()
+    protected function executeQuery(array $query)
     {
-        // build query
-        $query  = $this->getQuery();
-
-        $start  = microtime(1);
-
-        // send query to elastic
-        $result = $this->elastic->search($query);
-
-        // measure time
-        $time   = round((microtime(1) - $start) * 1000);
-
-        // total results
-        $totalResults = $result['hits']['total'];
-
-        // log
-        $index = $this->params['index'].'/'.$this->params['type'];
-        $context = [
-            'type'  => 'elastic',
-            'query' => json_encode($query),
-            'time'  => $time,
-            'index' => $index,
-            'found_rows'   => $totalResults,
-            'fetched_rows' => count($result['hits']['hits'])
-        ];
-
-        $this->logger->debug("Elastic query (index: $index, time: $time ms)", $context);
-
-        return $result;
+        return $this->elastic->search($query);
     }
 
-
-    /**
-     * Выполнить запрос к ES и вернуть результаты поиска.
-     * @return SearchResult - возвращает набор документов
-     */
-    public function fetchAll()
-    {
-        $response = $this->fetchRaw();
-        $results  = $this->extractDocuments($response);
-        $total    = $this->extractTotal($response);
-        $searchResult = new SearchResult($results, $total);
-        return $searchResult;
-    }
 
 }
