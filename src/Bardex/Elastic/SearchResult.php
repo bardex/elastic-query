@@ -9,7 +9,7 @@ namespace Bardex\Elastic;
  * @author Andrey Volynov <dubpubz@gmail.com>
  * @author Alexey Sumin <bardex@ya.ru>
  */
-class SearchResult implements \ArrayAccess, \Countable, \JsonSerializable, \IteratorAggregate
+class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
      * @var  int $totalCount
@@ -22,8 +22,9 @@ class SearchResult implements \ArrayAccess, \Countable, \JsonSerializable, \Iter
     protected $results = [];
 
 
-    public function __construct(array $results, $totalCount)
+    public function __construct($results, $totalCount)
     {
+        $results = (array) $results;
         $this->results = $results;
         $this->totalCount = $totalCount;
     }
@@ -105,14 +106,6 @@ class SearchResult implements \ArrayAccess, \Countable, \JsonSerializable, \Iter
         unset($this->results[$offset]);
 
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'totalCount' => $this->totalCount,
-            'results'    => $this->results
-        ];
     }
 
     public function getIterator()

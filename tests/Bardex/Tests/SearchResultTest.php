@@ -7,42 +7,50 @@ use Bardex\Elastic\SearchResult;
 
 class SearchResultTest extends AbstractTestCase
 {
-    protected static $testdata = [
-        ['id' => 10],
-        ['id' => 20],
-        ['id' => 30]
-    ];
-
     public function testSearchResult()
     {
-        $limit = 2;
-        $q = $this->createQuery();
-        $q->setOrderBy('id', 'asc');
-        $q->limit($limit);
+        $testResults = [
+            ['id' => 10],
+            ['id' => 20],
+        ];
 
-        $result = $q->fetchAll();
+        $limit = count($testResults);
+        $total = $limit * 2;
 
-        // test instance of
-        $this->assertInstanceOf(SearchResult::class, $result);
+        $result = new SearchResult($testResults, $total);
+
+        // not empty
+        $this->assertFalse($result->isEmpty());
 
         // test countable
         $this->assertCount($limit, $result);
 
         // test total count
-        $this->assertEquals(count(self::$testdata), $result->getTotalCount());
+        $this->assertEquals($total, $result->getTotalCount());
 
         // test get first
-        $this->assertEquals(self::$testdata[0], $result->getFirst());
+        $this->assertEquals($testResults[0], $result->getFirst());
 
         // test array access
-        for ($i=0; $i<$limit; ++$i) {
-            $this->assertEquals(self::$testdata[$i], $result[$i]);
+        for ($i=0; $i < $limit; ++$i) {
+            $this->assertEquals($testResults[$i], $result[$i]);
         }
 
         // test iterator
         foreach ($result as $i => $item) {
-            $this->assertEquals(self::$testdata[$i], $item);
+            $this->assertEquals($testResults[$i], $item);
         }
+
+        // get all results
+        $this->assertEquals($testResults, $result->getResults());
+    }
+
+    public function testEmpty()
+    {
+        $result = new SearchResult(null, 0);
+
+        $this->assertTrue($result->isEmpty());
+        $this->assertEmpty($result->getFirst());
     }
 
 }
