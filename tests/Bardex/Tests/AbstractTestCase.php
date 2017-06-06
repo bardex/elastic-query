@@ -40,6 +40,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+
     protected function createQuery()
     {
         $query = new SearchQuery(static::$client);

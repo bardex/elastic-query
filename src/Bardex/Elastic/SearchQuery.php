@@ -17,6 +17,17 @@ class SearchQuery extends Query
      */
     protected $params = [];
 
+    /**
+     * @var Where
+     */
+    protected $whereHelper;
+
+
+    function __clone()
+    {
+        $this->whereHelper = new Where($this);
+    }
+
 
     /**
      * Установить имя индекса для поиска
@@ -28,7 +39,6 @@ class SearchQuery extends Query
         $this->params['index'] = (string) $index;
         return $this;
     }
-
 
     /**
      * Установить имя типа для поиска
@@ -107,58 +117,19 @@ class SearchQuery extends Query
 
 
     /**
-     * Добавить фильтр точного совпадения, этот фильтр не влияет на поле релевантности _score.
+     * Создать фильтр.
      *
      * @param $field - поле по которому фильтруем (id, page.categoryId...)
-     * @param $value - искомое значение
-     * @example $query->where('channel', 1)->where('page.categoryId', 10);
-     * @return self $this;
+     * @example $query->where('channel')->equal(1)->where('page.categoryId')->in([10,12]);
+     * @return Where;
      */
-    public function where($field, $value)
+    public function where($field)
     {
-        $this->addFilter('term', [$field => $value]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр совпадения хотя бы одного значения из набора, этот фильтр не влияет на поле релевантности _score.
-     *
-     * @param $field - поле по которому фильтруем
-     * @param $values - массив допустимых значений
-     * @example $query->whereIn('channel', [1,2,3])->whereIn('page.categoryId', [10,11]);
-     * @return self $this;
-     */
-    public function whereIn($field, array $values)
-    {
-        // потому что ES не понимает дырки в ключах
-        $values = array_values($values);
-        $this->addFilter('terms', [$field => $values]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр вхождения значение в диапазон (обе границы включительно).
-     * Можно искать по диапазону дат.
-     * Этот фильтр не влияет на поле релевантности _score.
-     *
-     * @param $field - поле, по которому фильтруем
-     * @param $min - нижняя граница диапазона (включительно)
-     * @param $max - верхняя граница диапазона (включительно)
-     * @param $dateFormat - необязательное поле описание формата даты
-     * @example $q->whereBetween('created', '01/01/2010', '01/01/2011', 'dd/MM/yyyy');
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html
-     * @return self $this;
-     */
-    public function whereBetween($field, $min, $max, $dateFormat = null)
-    {
-        $params = ['gte' => $min, 'lte' => $max];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
+        if (null === $this->whereHelper) {
+            $this->whereHelper = new Where($this);
         }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
+        $this->whereHelper->setField($field);
+        return $this->whereHelper;
     }
 
 
@@ -177,110 +148,6 @@ class SearchQuery extends Query
         return $this;
     }
 
-
-    /**
-     * Добавить фильтр "больше или равно"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereGreaterOrEqual("price", 100)
-     * @example $query->whereGreaterOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereGreaterOrEqual("seller.rating", 4)
-     */
-    public function whereGreaterOrEqual($field, $value, $dateFormat = null)
-    {
-        $params = ['gte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-    /**
-     * Добавить фильтр "больше чем"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereGreater("price", 100)
-     * @example $query->whereGreater("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereGreater("seller.rating", 4)
-     */
-    public function whereGreater($field, $value, $dateFormat = null)
-    {
-        $params = ['gt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-    /**
-     * Добавить фильтр "меньше или равно"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereLessOrEqual("price", 100)
-     * @example $query->whereLessOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereLessOrEqual("seller.rating", 4)
-     */
-    public function whereLessOrEqual($field, $value, $dateFormat = null)
-    {
-        $params = ['lte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр "меньше чем"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - - необязательный формат даты
-     * @return self $this
-     * @example $query->whereLess("price", 100)
-     * @example $query->whereLess("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereLess("seller.rating", 4)
-     */
-    public function whereLess($field, $value, $dateFormat = null)
-    {
-        $params = ['lt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр полнотекстового поиска, этот фильтр влияет на поле релевантности _score.
-     *
-     * @param string|arary $field - поле (или массив полей) по которому ищем
-     * @param $text - поисковая фраза
-     * @example $query->whereMatch('title', 'яблочная слойка')->setOrderBy('_score', 'desc');
-     * @example $query->whereMatch(['title', 'anons'], 'яблочная слойка')->setOrderBy('_score', 'desc');
-     * @return self $this;
-     */
-    public function whereMatch($field, $text)
-    {
-        if (is_array($field)) {
-            $this->addFilter('multi_match', [
-                    'query'  => $text,
-                    'fields' => $field
-                ]);
-        } else {
-            $this->addFilter('match', [$field => $text]);
-        }
-        return $this;
-    }
 
     /**
      * Установить поле сортировки.
@@ -350,6 +217,4 @@ class SearchQuery extends Query
     {
         return $this->elastic->search($query);
     }
-
-
 }
