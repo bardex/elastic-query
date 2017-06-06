@@ -27,8 +27,8 @@ class MultiQueryTest extends AbstractTestCase
 
     public function testMultiQuery()
     {
-        $firstQuery  = $this->createQuery()->where('id', 10);
-        $secondQuery = $this->createQuery()->whereIn('id', [20,30]);
+        $firstQuery  = $this->createQuery()->where('id')->equal(10);
+        $secondQuery = $this->createQuery()->where('id')->in([20,30]);
 
         $multiQuery = new MultiQuery(static::$client);
         $multiQuery->addQuery('first', $firstQuery);
