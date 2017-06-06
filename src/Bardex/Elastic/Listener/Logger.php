@@ -54,6 +54,52 @@ class Logger implements IListener
         $this->slowQueryLimitMs = $slowQueryLimitMs;
     }
 
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+        return $this;
+    }
+
+    /**
+     * @param bool $logAllQueries
+     */
+    public function setLogAllQueries($logAllQueries)
+    {
+        $this->logAllQueries = $logAllQueries;
+        return $this;
+    }
+
+    /**
+     * @param bool $logErrorQueries
+     */
+    public function setLogErrorQueries($logErrorQueries)
+    {
+        $this->logErrorQueries = $logErrorQueries;
+        return $this;
+    }
+
+    /**
+     * @param bool $logSlowQueries
+     */
+    public function setLogSlowQueries($logSlowQueries)
+    {
+        $this->logSlowQueries = $logSlowQueries;
+        return $this;
+    }
+
+    /**
+     * @param int $slowQueryLimitMs
+     */
+    public function setSlowQueryLimitMs($slowQueryLimitMs)
+    {
+        $this->slowQueryLimitMs = $slowQueryLimitMs;
+        return $this;
+    }
+
+
     public function onSuccess(array $query, array $response, $time)
     {
         if ($this->logAllQueries || ($this->logSlowQueries && $time > $this->slowQueryLimitMs)) {
