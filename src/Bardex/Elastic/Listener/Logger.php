@@ -54,16 +54,57 @@ class Logger implements IListener
         $this->slowQueryLimitMs = $slowQueryLimitMs;
     }
 
-
     public function onSuccess(array $query, array $response, $time)
     {
+        if ($this->logAllQueries || ($this->logSlowQueries && $time > $this->slowQueryLimitMs)) {
+            $index = $this->getIndexName($query);
+            $context = [
+                'query' => json_encode($query),
+                'time'  => $time,
+                'time_range' => $this->getTimeRange($time),
+                'index'      => $index,
+                'found_rows'   => $response['hits']['total'],
+                'fetched_rows' => count($response['hits']['hits'])
+            ];
 
-        // TODO: Implement onSuccess() method.
+            if ($this->logAllQueries) {
+                $this->logger->debug("Elastic query (index: $index, time: $time ms)", $context);
+            }
+
+            if ($this->logSlowQueries && $time > $this->slowQueryLimitMs) {
+                $this->logger->warning("Slow elastic query (index: $index, time: $time ms)", $context);
+            }
+        }
     }
 
     public function onError(array $query, \Exception $e)
     {
-        // TODO: Implement onError() method.
+        if ($this->logErrorQueries) {
+            $index = $this->getIndexName($query);
+            $context = [
+                'query' => json_encode($query),
+                'index' => $index,
+                'error' => $e->getMessage(),
+            ];
+            $this->logger->error("Error elastic query (index: $index)", $context);
+        }
     }
 
+    protected function getIndexName(array $query)
+    {
+        $index = isset($query['index']) ? $query['index'] : '(undefined index)';
+        $type  = isset($query['type']) ? $query['type'] : '(undefined type)';
+        return "$index/$type";
+    }
+
+    protected function getTimeRange($time)
+    {
+        if ($time <= 10)   return '0-10 ms';
+        if ($time <= 30)   return '10-30 ms';
+        if ($time <= 50)   return '30-50 ms';
+        if ($time <= 100)  return '50-100 ms';
+        if ($time <= 500)  return '100-500 ms';
+        if ($time <= 1000) return '500-1000 ms';
+        if ($time > 1000)  return '> 1000 ms';
+    }
 }
