@@ -15,14 +15,14 @@ use Psr\Log\NullLogger;
 abstract class Query implements \JsonSerializable
 {
     /**
-     * @var LoggerInterface $logger
-     */
-    protected $logger;
-
-    /**
      * @var ElasticClient $client
      */
     protected $elastic;
+
+    /**
+     * @var array
+     */
+    protected $listeners = [];
 
     /**
      * Получить собранный elasticsearch-запрос
@@ -46,19 +46,6 @@ abstract class Query implements \JsonSerializable
     public function __construct(ElasticClient $elastic)
     {
         $this->elastic = $elastic;
-        $this->logger = new NullLogger;
-    }
-
-
-    /**
-     * Добавить Psr-совместимый логгер
-     * @param LoggerInterface $logger
-     * @return Query $this
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
     }
 
 
@@ -83,15 +70,19 @@ abstract class Query implements \JsonSerializable
         // build query
         $query = $this->getQuery();
 
-        $start = microtime(1);
-
         // send query to elastic
-        $result = $this->executeQuery($query);
+        $start  = microtime(1);
 
-        // measure time
-        $time = round((microtime(1) - $start) * 1000);
-
-        return $result;
+        try {
+            $result = $this->executeQuery($query);
+            $time   = round((microtime(1) - $start) * 1000);
+            $this->triggerSuccess($query, $result, $time);
+            return $result;
+        }
+        catch (\Exception $e) {
+            $this->triggerError($query, $e);
+            throw $e;
+        }
     }
 
 
@@ -149,6 +140,35 @@ abstract class Query implements \JsonSerializable
         return $total;
     }
 
+    public function addListener(IListener $listener)
+    {
+        $this->listeners[] = $listener;
+        return $this;
+    }
+
+    public function removeListener(IListener $listener)
+    {
+        foreach ($this->listeners as $i => $listItem) {
+            if ($listener === $listItem) {
+                unset($this->listeners[$i]);
+            }
+        }
+        return $this;
+    }
+
+    protected function triggerSuccess(array $query, array $response, $time)
+    {
+        foreach ($this->listeners as $listener) {
+            $listener->onSuccess($query, $response, $time);
+        }
+    }
+
+    protected function triggerError(array $query, \Exception $e)
+    {
+        foreach ($this->listeners as $listener) {
+            $listener->onError($query, $e);
+        }
+    }
 
     /**
      * Имплементация \JsonSerializable
