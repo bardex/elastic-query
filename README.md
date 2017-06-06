@@ -19,11 +19,12 @@ $query = new \Bardex\Elastic\SearchQuery($elastic);
 
 $query->setIndex('products')
   ->setType('products')
-  ->whereIn('rubric', [1,5,7])
-  ->whereGreater('price', 0)
-  ->whereMatch('title', 'погремушка')
+  ->where('rubric')->in([1,5,7])
+  ->where('price')->greater(0)
+  ->where(['title','anons'])->match('погремушка')
   ->exclude(['anons', 'comments.*'])
-  ->setOrderBy('dateCreation', 'desc')
+  ->setOrderBy('rating', 'desc')
+  ->addOrderBy('dateCreation', 'desc')
   ->limit(30, 0);
 
 $result = $query->fetchAll();
@@ -43,14 +44,14 @@ $elastic = \Elasticsearch\ClientBuilder::create()
 $posts = new \Bardex\Elastic\SearchQuery($elastic);
 $posts->setIndex('posts')
   ->setType('posts')
-  ->whereIn('userId', [1,5,7])
+  ->where('userId')->in([1,5,7])
   ->setOrderBy('dateCreation', 'desc')
   ->limit(100, 0);
 
 $users = new \Bardex\Elastic\SearchQuery($elastic);
 $users->setIndex('users')
   ->setType('users')
-  ->whereIn('id', [1,5,7])
+  ->where('id')->in([1,5,7])
   ->limit(3, 0);
 
 $multi = new \Bardex\Elastic\MultiQuery($elastic);
