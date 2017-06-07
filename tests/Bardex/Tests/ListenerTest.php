@@ -43,7 +43,9 @@ class ListenerTest extends AbstractTestCase
     {
         $listener = $this->getMock(\Bardex\Elastic\IListener::class);
         $query = $this->createQuery();
-        $query->setType('fake_type')->setOrderBy('id'); // query with error
+        $script = new \Bardex\Elastic\Script;
+        $script->addLine('this script with error');
+        $query->whereScript($script); // query with error
         $query->addListener($listener);
         $listener->expects($this->once())->method('onError');
         $listener->expects($this->never())->method('onSuccess');
