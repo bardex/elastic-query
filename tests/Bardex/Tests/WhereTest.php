@@ -2,7 +2,7 @@
 
 namespace Bardex\Tests;
 
-use \Bardex\Elastic\SearchQuery;
+use Bardex\Elastic\SearchQuery;
 use Bardex\Elastic\SearchResult;
 
 
