@@ -43,6 +43,18 @@ class SearchResultTest extends AbstractTestCase
 
         // get all results
         $this->assertEquals($testResults, $result->getResults());
+
+        // isset, unset
+        $this->assertTrue(isset($result[0]));
+        unset($result[0]);
+        $this->assertFalse(isset($result[0]));
+
+        // set
+        $newSet = [10,20,30];
+        $result[1] = $newSet;
+
+        $this->assertEquals($newSet, $result[1]);
+
     }
 
     public function testEmpty()
