@@ -40,11 +40,11 @@ class WhereTest extends AbstractTestCase
         ['name' => 'greaterEqual', 'method' => 'greaterOrEqual', 'field' => 'id', 'params' => [10], 'validCount' => 2, 'validId' => [10,20]],
         ['name' => 'less',         'method' => 'less', 'field' => 'id', 'params' => [10], 'validCount' => 1, 'validId' => [2]],
         ['name' => 'lessEqual',    'method' => 'lessOrEqual', 'field' => 'id', 'params' => [10], 'validCount' => 2, 'validId' => [10,2]],
-        ['name' => 'between date', 'method' => 'between',     'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00','2016-12-31T23:00:00+03:00'], 'validCount' => 1, 'validId' => [10]],
-        ['name' => 'greater date', 'method' => 'greater',     'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00'], 'validCount' => 1, 'validId' => [20]],
-        ['name' => 'greaterEqual date', 'method' => 'greaterOrEqual', 'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00'], 'validCount' => 2, 'validId' => [10,20]],
-        ['name' => 'less date',         'method' => 'less',           'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00'], 'validCount' => 1, 'validId' => [2]],
-        ['name' => 'lessEqual date',    'method' => 'lessOrEqual',    'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00'], 'validCount' => 2, 'validId' => [10,2]],
+        ['name' => 'between date', 'method' => 'between',     'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00','2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 1, 'validId' => [10]],
+        ['name' => 'greater date', 'method' => 'greater',     'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 1, 'validId' => [20]],
+        ['name' => 'greaterEqual date', 'method' => 'greaterOrEqual', 'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 2, 'validId' => [10,20]],
+        ['name' => 'less date',         'method' => 'less',           'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 1, 'validId' => [2]],
+        ['name' => 'lessEqual date',    'method' => 'lessOrEqual',    'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 2, 'validId' => [10,2]],
     ];
 
     public function testInstanceOf()

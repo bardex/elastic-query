@@ -61,11 +61,7 @@ class Where
      */
     public function between($min, $max, $dateFormat = null)
     {
-        $params = ['gte' => $min, 'lte' => $max];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->query->addFilter('range', [$this->field => $params]);
+        $this->range(['gte' => $min, 'lte' => $max], $dateFormat);
         return $this->query;
     }
 
@@ -77,11 +73,7 @@ class Where
      */
     public function greaterOrEqual($value, $dateFormat = null)
     {
-        $params = ['gte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->query->addFilter('range', [$this->field => $params]);
+        $this->range(['gte' => $value], $dateFormat);
         return $this->query;
     }
 
@@ -93,11 +85,7 @@ class Where
      */
     public function greater($value, $dateFormat = null)
     {
-        $params = ['gt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->query->addFilter('range', [$this->field => $params]);
+        $this->range(['gt' => $value], $dateFormat);
         return $this->query;
     }
 
@@ -109,11 +97,7 @@ class Where
      */
     public function lessOrEqual($value, $dateFormat = null)
     {
-        $params = ['lte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->query->addFilter('range', [$this->field => $params]);
+        $this->range(['lte' => $value], $dateFormat);
         return $this->query;
     }
 
@@ -126,10 +110,14 @@ class Where
      */
     public function less($value, $dateFormat = null)
     {
-        $params = ['lt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
+        $this->range(['lt' => $value], $dateFormat);
+        return $this->query;
+    }
+
+
+    protected function range($params, $dateFormat=null)
+    {
+        if ($dateFormat) $params['format'] = $dateFormat;
         $this->query->addFilter('range', [$this->field => $params]);
         return $this->query;
     }

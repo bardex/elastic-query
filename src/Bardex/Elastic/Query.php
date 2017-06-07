@@ -12,7 +12,7 @@ use Psr\Log\NullLogger;
  * @package Bardex\Elastic
  * @author Alexey Sumin <bardex@ya.ru>
  */
-abstract class Query implements \JsonSerializable
+abstract class Query
 {
     /**
      * @var ElasticClient $client
@@ -168,14 +168,5 @@ abstract class Query implements \JsonSerializable
         foreach ($this->listeners as $listener) {
             $listener->onError($query, $e);
         }
-    }
-
-    /**
-     * Имплементация \JsonSerializable
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return $this->getQuery();
     }
 }
