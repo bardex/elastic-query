@@ -24,15 +24,30 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-Bardex.Elastic.Listener.Logger.html">Bardex\Elastic\Listener\Logger</a></li>
+				<li><a href="class-Bardex.Elastic.MultiQuery.html">Bardex\Elastic\MultiQuery</a></li>
 				<li class="active"><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></li>
+				<li><a href="class-Bardex.Elastic.Script.html">Bardex\Elastic\Script</a></li>
+				<li><a href="class-Bardex.Elastic.SearchQuery.html">Bardex\Elastic\SearchQuery</a></li>
+				<li><a href="class-Bardex.Elastic.SearchResult.html">Bardex\Elastic\SearchResult</a></li>
+				<li><a href="class-Bardex.Elastic.Where.html">Bardex\Elastic\Where</a></li>
 			</ul>
 
 			<h3>Interfaces</h3>
 			<ul>
-				<li><a href="class-JsonSerializable.html">JsonSerializable</a></li>
+				<li><a href="class-ArrayAccess.html">ArrayAccess</a></li>
+				<li><a href="class-Bardex.Elastic.IListener.html">Bardex\Elastic\IListener</a></li>
+				<li><a href="class-Countable.html">Countable</a></li>
+				<li><a href="class-IteratorAggregate.html">IteratorAggregate</a></li>
+				<li><a href="class-Throwable.html">Throwable</a></li>
+				<li><a href="class-Traversable.html">Traversable</a></li>
 			</ul>
 
 
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Exception.html">Exception</a></li>
+			</ul>
 
 
 		</div>
@@ -70,21 +85,17 @@
 
 	<div class="description">
 	
-<p>Fluent interface for elasticsearch</p>
+<p>Class Query</p>
 
 	</div>
 
-	<dl class="tree">
-		<dd style="padding-left:0px">
-<b><span>Bardex\Elastic\Query</span></b>			
-			 implements 
-				<a href="class-JsonSerializable.html"><span>JsonSerializable</span></a>
-			
-			
-		</dd>
-	</dl>
 
 
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-Bardex.Elastic.MultiQuery.html">Bardex\Elastic\MultiQuery</a>, 
+			<a href="class-Bardex.Elastic.SearchQuery.html">Bardex\Elastic\SearchQuery</a>
+	</div>
 
 
 
@@ -92,30 +103,70 @@
 
 
 	<div class="info">
-		
+		<b>Abstract</b><br>
 		
 		<b>Namespace:</b> Bardex\Elastic<br>
 		<b>Package:</b> Bardex\Elastic<br>
 
-		<b>Located at</b> <a href="source-class-Bardex.Elastic.Query.html#6-526" title="Go to source code">Bardex/Elastic/Query.php</a><br>
+				<b>Author:</b>
+				Alexey Sumin &lt;<a
+href="mailto:bardex&#64;ya.ru">bardex&#64;<!-- -->ya.ru</a>&gt;<br>
+		<b>Located at</b> <a href="source-class-Bardex.Elastic.Query.html#10-172" title="Go to source code">Bardex/Elastic/Query.php</a><br>
 	</div>
 
 
 
 	<table class="summary methods" id="methods">
 	<caption>Methods summary</caption>
+	<tr data-order="getQuery" id="_getQuery">
+
+		<td class="attributes"><code>
+			abstract public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getQuery">#</a>
+		<code><a href="source-class-Bardex.Elastic.Query.html#27-31" title="Go to source code">getQuery</a>( )</code>
+
+		<div class="description short">
+			
+<p>Получить собранный elasticsearch-запрос</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Получить собранный elasticsearch-запрос</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>array<br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="__construct" id="___construct">
 
 		<td class="attributes"><code>
 			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
+			
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#35-44" title="Go to source code">__construct</a>( <span>Elasticsearch\Client <var>$elastic</var></span> )</code>
+		<code><a href="source-class-Bardex.Elastic.Query.html#42-49" title="Go to source code">__construct</a>( <span>Elasticsearch\Client <var>$elastic</var></span> )</code>
 
 		<div class="description short">
 			
@@ -135,10 +186,6 @@
 					<dd></dd>
 				</dl></div>
 
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
 
 
 
@@ -146,993 +193,37 @@
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="setLogger" id="_setLogger">
+	<tr data-order="fetchAll" id="_fetchAll">
 
 		<td class="attributes"><code>
 			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
+			<code><a href="class-Bardex.Elastic.SearchResult.html">Bardex\Elastic\SearchResult</a></code>
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_setLogger">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#46-55" title="Go to source code">setLogger</a>( <span>Psr\Log\LoggerInterface <var>$logger</var></span> )</code>
+		<a class="anchor" href="#_fetchAll">#</a>
+		<code><a href="source-class-Bardex.Elastic.Query.html#52-61" title="Go to source code">fetchAll</a>( )</code>
 
 		<div class="description short">
 			
-<p>Добавить Psr-совместимый логгер</p>
+<p>Выполнить запрос к ES и вернуть результаты
+поиска.</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Добавить Psr-совместимый логгер</p>
+<p>Выполнить запрос к ES и вернуть результаты
+поиска.</p>
 
 
 
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$logger</var></dt>
-					<dd></dd>
-				</dl></div>
 
 				<h4>Returns</h4>
 				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="setIndex" id="_setIndex">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_setIndex">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#58-67" title="Go to source code">setIndex</a>( <span>mixed <var>$index</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Установить имя индекса для поиска</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Установить имя индекса для поиска</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$index</var></dt>
-					<dd></dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="setType" id="_setType">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_setType">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#70-79" title="Go to source code">setType</a>( <span>mixed <var>$type</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Установить имя типа для поиска</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Установить имя типа для поиска</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$type</var></dt>
-					<dd></dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="select" id="_select">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_select">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#82-94" title="Go to source code">select</a>( <span>array <var>$fields</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Выводить перечисленные поля. (не
-обязательный метод, по-умолчанию, выводятся
-все) Методы select() и exclude() могут работать
-совместно.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Выводить перечисленные поля. (не
-обязательный метод, по-умолчанию, выводятся
-все) Методы select() и exclude() могут работать
-совместно.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$fields</var></dt>
-					<dd></dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;select(['id', 'title', 'brand.id', 'brand.title']);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="addScriptField" id="_addScriptField">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_addScriptField">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#97-121" title="Go to source code">addScriptField</a>( <span>string <var>$fieldName</var></span>, <span>string <var>$script</var></span>, <span>array <var>$params</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$lang</var> = <span class="php-quote">'painless'</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить в результаты вычисляемое поле,
-на скриптовом языке painless или groovy
-Использование параметров рекомендуется,
-для увеличения производительности и
-эффективности компилирования скриптов.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить в результаты вычисляемое поле,
-на скриптовом языке painless или groovy
-Использование параметров рекомендуется,
-для увеличения производительности и
-эффективности компилирования скриптов.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$fieldName</var></dt>
-					<dd>- имя поля в результатах (если такое поле уже
-есть в документе, то оно будет заменено)</dd>
-					<dt><var>$script</var></dt>
-					<dd>- текст скрипта</dd>
-					<dt><var>$params</var></dt>
-					<dd>- параметры которые нужно передать в скрипт</dd>
-					<dt><var>$lang</var></dt>
-					<dd>- язык скрипта painless или groovy</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Link</h4>
-				<div class="list">
-						<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html">https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html</a><br>
-				</div>
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;addScriptField('pricefactor', 'return doc["product.price"].value *
-params.factor', ['factor' =&gt; 2]);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="exclude" id="_exclude">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_exclude">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#124-136" title="Go to source code">exclude</a>( <span>array <var>$fields</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Удалить из выборки поля. (не обязательный
-метод, по-умолчанию, выводятся все) Методы
-select() и exclude() могут работать совместно.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Удалить из выборки поля. (не обязательный
-метод, по-умолчанию, выводятся все) Методы
-select() и exclude() могут работать совместно.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$fields</var></dt>
-					<dd></dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;exclude(['anons', '*.anons']);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="addFilter" id="_addFilter">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_addFilter">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#139-156" title="Go to source code">addFilter</a>( <span>string <var>$type</var></span>, <span>mixed <var>$filter</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр в raw формате, если готовые
-методы фильтрации не подходят. Для удобства
-используй готовые методы фильтрации: where(),
-whereIn(), whereBetween(), whereMatch() whereLess() и другие методы
-where*()</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр в raw формате, если готовые
-методы фильтрации не подходят. Для удобства
-используй готовые методы фильтрации: where(),
-whereIn(), whereBetween(), whereMatch() whereLess() и другие методы
-where*()</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$type</var></dt>
-					<dd>- тип фильтрации (term|terms|match|range)</dd>
-					<dt><var>$filter</var></dt>
-					<dd>фильтр</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Link</h4>
-				<div class="list">
-						<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html">https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html</a><br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="where" id="_where">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_where">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#159-171" title="Go to source code">where</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр точного совпадения, этот
-фильтр не влияет на поле релевантности
-_score.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр точного совпадения, этот
-фильтр не влияет на поле релевантности
-_score.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле по которому фильтруем (id, page.categoryId...)</dd>
-					<dt><var>$value</var></dt>
-					<dd>искомое значение</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;where('channel', 1)-&gt;where('page.categoryId', 10);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereIn" id="_whereIn">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereIn">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#174-188" title="Go to source code">whereIn</a>( <span>mixed <var>$field</var></span>, <span>array <var>$values</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр совпадения хотя бы одного
-значения из набора, этот фильтр не влияет на
-поле релевантности _score.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр совпадения хотя бы одного
-значения из набора, этот фильтр не влияет на
-поле релевантности _score.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле по которому фильтруем</dd>
-					<dt><var>$values</var></dt>
-					<dd>массив допустимых значений</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereIn('channel', [1,2,3])-&gt;whereIn('page.categoryId', [10,11]);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereBetween" id="_whereBetween">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereBetween">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#191-212" title="Go to source code">whereBetween</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$min</var></span>, <span>mixed <var>$max</var></span>, <span>mixed <var>$dateFormat</var> = <span class="php-keyword1">null</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр вхождения значение в
-диапазон (обе границы включительно). Можно
-искать по диапазону дат. Этот фильтр не
-влияет на поле релевантности _score.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр вхождения значение в
-диапазон (обе границы включительно). Можно
-искать по диапазону дат. Этот фильтр не
-влияет на поле релевантности _score.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле, по которому фильтруем</dd>
-					<dt><var>$min</var></dt>
-					<dd>нижняя граница диапазона (включительно)</dd>
-					<dt><var>$max</var></dt>
-					<dd>верхняя граница диапазона (включительно)</dd>
-					<dt><var>$dateFormat</var></dt>
-					<dd>необязательное поле описание формата даты</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Link</h4>
-				<div class="list">
-						<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html">https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html</a><br>
-				</div>
-				<h4>Example</h4>
-				<div class="list">
-						$q-&gt;whereBetween('created', '01/01/2010', '01/01/2011', 'dd/MM/yyyy');<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereScript" id="_whereScript">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereScript">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#215-240" title="Go to source code">whereScript</a>( <span>string <var>$script</var></span>, <span>array <var>$params</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$lang</var> = <span class="php-quote">'painless'</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить в фильтр сложное условие с
-вычислениями, на скриптовом языке painless или
-groovy. Использование параметров
-рекомендуется, для увеличения
-производительности и эффективности
-компилирования скриптов.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить в фильтр сложное условие с
-вычислениями, на скриптовом языке painless или
-groovy. Использование параметров
-рекомендуется, для увеличения
-производительности и эффективности
-компилирования скриптов.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$script</var></dt>
-					<dd>- скрипт</dd>
-					<dt><var>$params</var></dt>
-					<dd>- параметры передаваемые в скрипт</dd>
-					<dt><var>$lang</var></dt>
-					<dd>- язык painless или groovy</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Link</h4>
-				<div class="list">
-						<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html">https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html</a><br>
-						<a href="https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html">https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html</a><br>
-				</div>
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereScript('doc["id"].value == params.id', ['id' =&gt; 5169]);<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereGreaterOrEqual" id="_whereGreaterOrEqual">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereGreaterOrEqual">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#243-261" title="Go to source code">whereGreaterOrEqual</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>null <var>$dateFormat</var> = <span class="php-keyword1">null</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр "больше или равно"</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр "больше или равно"</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле</dd>
-					<dt><var>$value</var></dt>
-					<dd>значение</dd>
-					<dt><var>$dateFormat</var></dt>
-					<dd>- необязательный формат даты</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereGreaterOrEqual("price", 100)<br>
-						$query-&gt;whereGreaterOrEqual("created", "31/12/2016" , "dd/MM/yyyy")<br>
-						$query-&gt;whereGreaterOrEqual("seller.rating", 4)<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereGreater" id="_whereGreater">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereGreater">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#263-281" title="Go to source code">whereGreater</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>null <var>$dateFormat</var> = <span class="php-keyword1">null</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр "больше чем"</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр "больше чем"</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле</dd>
-					<dt><var>$value</var></dt>
-					<dd>значение</dd>
-					<dt><var>$dateFormat</var></dt>
-					<dd>- необязательный формат даты</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereGreater("price", 100)<br>
-						$query-&gt;whereGreater("created", "31/12/2016" , "dd/MM/yyyy")<br>
-						$query-&gt;whereGreater("seller.rating", 4)<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereLessOrEqual" id="_whereLessOrEqual">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereLessOrEqual">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#283-301" title="Go to source code">whereLessOrEqual</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>null <var>$dateFormat</var> = <span class="php-keyword1">null</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр "меньше или равно"</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр "меньше или равно"</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле</dd>
-					<dt><var>$value</var></dt>
-					<dd>значение</dd>
-					<dt><var>$dateFormat</var></dt>
-					<dd>- необязательный формат даты</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereLessOrEqual("price", 100)<br>
-						$query-&gt;whereLessOrEqual("created", "31/12/2016" , "dd/MM/yyyy")<br>
-						$query-&gt;whereLessOrEqual("seller.rating", 4)<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereLess" id="_whereLess">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereLess">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#304-322" title="Go to source code">whereLess</a>( <span>mixed <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>null <var>$dateFormat</var> = <span class="php-keyword1">null</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр "меньше чем"</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр "меньше чем"</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле</dd>
-					<dt><var>$value</var></dt>
-					<dd>значение</dd>
-					<dt><var>$dateFormat</var></dt>
-					<dd>- - необязательный формат даты</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereLess("price", 100)<br>
-						$query-&gt;whereLess("created", "31/12/2016" , "dd/MM/yyyy")<br>
-						$query-&gt;whereLess("seller.rating", 4)<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="whereMatch" id="_whereMatch">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_whereMatch">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#325-345" title="Go to source code">whereMatch</a>( <span>string|arary <var>$field</var></span>, <span>mixed <var>$text</var></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить фильтр полнотекстового поиска,
-этот фильтр влияет на поле релевантности
-_score.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить фильтр полнотекстового поиска,
-этот фильтр влияет на поле релевантности
-_score.</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>- поле (или массив полей) по которому ищем</dd>
-					<dt><var>$text</var></dt>
-					<dd>поисковая фраза</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;whereMatch('title', 'яблочная
-слойка')-&gt;setOrderBy('_score', 'desc');<br>
-						$query-&gt;whereMatch(['title', 'anons'], 'яблочная
-слойка')-&gt;setOrderBy('_score', 'desc');<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="setOrderBy" id="_setOrderBy">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_setOrderBy">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#347-360" title="Go to source code">setOrderBy</a>( <span>mixed <var>$field</var></span>, <span>string <var>$order</var> = <span class="php-quote">'asc'</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Установить поле сортировки. Для
-сортировки по релевантности существует
-псевдополе _score (значение больше -
-релевантность лучше)</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Установить поле сортировки. Для
-сортировки по релевантности существует
-псевдополе _score (значение больше -
-релевантность лучше)</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле сортировки</dd>
-					<dt><var>$order</var></dt>
-					<dd>- направление сортировки asc|desc</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;setOrderBy('_score', 'desc');<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="addOrderBy" id="_addOrderBy">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_addOrderBy">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#362-380" title="Go to source code">addOrderBy</a>( <span>mixed <var>$field</var></span>, <span>string <var>$order</var> = <span class="php-quote">'asc'</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Добавить поле сортировки. Для сортировки
-по релевантности существует псевдополе _score
-(значение больше - релевантность лучше)</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Добавить поле сортировки. Для сортировки
-по релевантности существует псевдополе _score
-(значение больше - релевантность лучше)</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$field</var></dt>
-					<dd>поле сортировки</dd>
-					<dt><var>$order</var></dt>
-					<dd>- направление сортировки asc|desc</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this<br>
-				</div>
-
-
-				<h4>Example</h4>
-				<div class="list">
-						$query-&gt;addOrderBy('_score', 'desc');<br>
-						$query-&gt;addOrderBy('seller.rating', 'desc');<br>
-				</div>
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="limit" id="_limit">
-
-		<td class="attributes"><code>
-			 public 
-			<code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code>
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_limit">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#383-394" title="Go to source code">limit</a>( <span>mixed <var>$limit</var></span>, <span>integer <var>$offset</var> = <span class="php-num">0</span></span> )</code>
-
-		<div class="description short">
-			
-<p>Установить лимиты выборки</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Установить лимиты выборки</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$limit</var></dt>
-					<dd>сколько строк выбирать</dd>
-					<dt><var>$offset</var></dt>
-					<dd>- сколько строк пропустить</dd>
-				</dl></div>
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code><code><a href="class-Bardex.Elastic.Query.html">Bardex\Elastic\Query</a></code></code><br>$this;<br>
+					<code><code><a href="class-Bardex.Elastic.SearchResult.html">Bardex\Elastic\SearchResult</a></code></code><br>- возвращает набор документов<br>
 				</div>
 
 
@@ -1152,29 +243,21 @@ _score.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_fetchRaw">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#397-435" title="Go to source code">fetchRaw</a>( )</code>
+		<code><a href="source-class-Bardex.Elastic.Query.html#64-86" title="Go to source code">fetchRaw</a>( )</code>
 
 		<div class="description short">
 			
 <p>Выполнить запрос к ES и вернуть
-необработанный результат (с мета-данными).
-Внимание! для экономии памяти результаты не
-хранятся в этом объекте, а сразу
-возвращаются. Чтобы получить кол-во строк
-всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
+необработанный результат (с
+мета-данными).</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
 <p>Выполнить запрос к ES и вернуть
-необработанный результат (с мета-данными).
-Внимание! для экономии памяти результаты не
-хранятся в этом объекте, а сразу
-возвращаются. Чтобы получить кол-во строк
-всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
+необработанный результат (с
+мета-данными).</p>
 
 
 
@@ -1190,46 +273,28 @@ _score.</p>
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="fetchAll" id="_fetchAll">
+	<tr data-order="addListener" id="_addListener">
 
 		<td class="attributes"><code>
 			 public 
-			array
+			
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_fetchAll">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#438-464" title="Go to source code">fetchAll</a>( )</code>
+		<a class="anchor" href="#_addListener">#</a>
+		<code><a href="source-class-Bardex.Elastic.Query.html#143-147" title="Go to source code">addListener</a>( <span><code><a href="class-Bardex.Elastic.IListener.html">Bardex\Elastic\IListener</a></code> <var>$listener</var></span> )</code>
 
 		<div class="description short">
 			
-<p>Выполнить запрос к ES и вернуть результаты
-поиска. Внимание! для экономии памяти
-результаты не хранятся в этом объекте, а
-сразу возвращаются. Чтобы получить кол-во
-строк всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
-
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Выполнить запрос к ES и вернуть результаты
-поиска. Внимание! для экономии памяти
-результаты не хранятся в этом объекте, а
-сразу возвращаются. Чтобы получить кол-во
-строк всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
 
 
 
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>array</code><br>- возвращает набор документов<br>
-				</div>
 
 
 
@@ -1237,198 +302,28 @@ _score.</p>
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="fetchOne" id="_fetchOne">
+	<tr data-order="removeListener" id="_removeListener">
 
 		<td class="attributes"><code>
 			 public 
-			array|null
+			
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_fetchOne">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#467-481" title="Go to source code">fetchOne</a>( )</code>
+		<a class="anchor" href="#_removeListener">#</a>
+		<code><a href="source-class-Bardex.Elastic.Query.html#149-157" title="Go to source code">removeListener</a>( <span><code><a href="class-Bardex.Elastic.IListener.html">Bardex\Elastic\IListener</a></code> <var>$listener</var></span> )</code>
 
 		<div class="description short">
 			
-<p>Выполнить запрос к ES и вернуть первый
-результат. Внимание! для экономии памяти
-результаты не хранятся в этом объекте, а
-сразу возвращаются. Чтобы получить кол-во
-строк всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
-
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Выполнить запрос к ES и вернуть первый
-результат. Внимание! для экономии памяти
-результаты не хранятся в этом объекте, а
-сразу возвращаются. Чтобы получить кол-во
-строк всего найденных в индексе (без учета
-лимита), используй метод getTotalResults()</p>
 
 
 
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>array|null</code><br>возращает первый найденный документ или null.<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getTotalResults" id="_getTotalResults">
-
-		<td class="attributes"><code>
-			 public 
-			integer
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getTotalResults">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#484-491" title="Go to source code">getTotalResults</a>( )</code>
-
-		<div class="description short">
-			
-<p>Количество документов всего найденных в
-индексе, для последнего запроса.</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Количество документов всего найденных в
-индексе, для последнего запроса.</p>
-
-
-
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>integer</code><br>количество найденных документов<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getQuery" id="_getQuery">
-
-		<td class="attributes"><code>
-			 public 
-			array
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getQuery">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#494-507" title="Go to source code">getQuery</a>( )</code>
-
-		<div class="description short">
-			
-<p>Получить собранный запрос</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Получить собранный запрос</p>
-
-
-
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>array</code><br>array<br>
-				</div>
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="jsonSerialize" id="_jsonSerialize">
-
-		<td class="attributes"><code>
-			 public 
-			array
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_jsonSerialize">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#509-515" title="Go to source code">jsonSerialize</a>( )</code>
-
-		<div class="description short">
-			
-<p>Имплементация \JsonSerializable</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Имплементация \JsonSerializable</p>
-
-
-
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>array</code><br>array<br>
-				</div>
-
-
-
-
-				<h4>Implementation of</h4>
-				<div class="list"><code><a href="class-JsonSerializable.html#_jsonSerialize">JsonSerializable::jsonSerialize()</a></code></div>
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getJsonQuery" id="_getJsonQuery">
-
-		<td class="attributes"><code>
-			 public 
-			string
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getJsonQuery">#</a>
-		<code><a href="source-class-Bardex.Elastic.Query.html#518-525" title="Go to source code">getJsonQuery</a>( )</code>
-
-		<div class="description short">
-			
-<p>Получить JSON-дамп запроса для отладки</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Получить JSON-дамп запроса для отладки</p>
-
-
-
-
-				<h4>Returns</h4>
-				<div class="list">
-					<code>string</code><br>string<br>
-				</div>
 
 
 
@@ -1462,7 +357,7 @@ _score.</p>
 	</div>
 </div>
 </div>
-<script src="resources/combined.js?3508075"></script>
-<script src="elementlist.js?4226089377"></script>
+<script src="resources/combined.js?3825555667"></script>
+<script src="elementlist.js?3055742031"></script>
 </body>
 </html>
