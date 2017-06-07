@@ -9,22 +9,10 @@ use Bardex\Elastic\SearchResult;
 class SortWithLimitTest extends AbstractTestCase
 {
     protected static $testdata = [
-        [
-            'id' => 2,
-            'status' => 200,
-        ],
-        [
-            'id' => 20,
-            'status' => 100,
-        ],
-        [
-            'id' => 10,
-            'status' => 200,
-        ],
-        [
-            'id' => 30,
-            'status' => 100,
-        ]
+        ['id' => 2,  'status' => 200],
+        ['id' => 20, 'status' => 100],
+        ['id' => 10, 'status' => 200],
+        ['id' => 30, 'status' => 100]
     ];
 
     public function testOrderAsc()
