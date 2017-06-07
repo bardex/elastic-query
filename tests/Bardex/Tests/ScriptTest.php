@@ -68,6 +68,24 @@ class ScriptTest extends AbstractTestCase
         $this->assertEquals(100, $row['test']);
     }
 
+    public function testScriptFieldsReturnArray()
+    {
+        $script = new Script();
+        $script->addLine('def a = 100;');
+        $script->addLine('def b = 200;');
+        $script->addLine('return [a,b];');
+
+        $query = $this->createQuery();
+        $query->addScriptField('test', $script);
+
+        $queryBody = $query->getQuery();
+        $this->assertTrue(isset($queryBody['body']['script_fields']['test']));
+
+        $row = $query->fetchAll()->getFirst();
+        $this->assertEquals([100,200], $row['test']);
+    }
+
+
     public function testScriptFieldsWithParams()
     {
         $script = new Script();
