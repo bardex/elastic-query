@@ -11,19 +11,19 @@ class SortWithLimitTest extends AbstractTestCase
     protected static $testdata = [
         [
             'id' => 2,
-            'title' => 'Bob',
+            'status' => 200,
         ],
         [
             'id' => 20,
-            'title' => 'Alice',
+            'status' => 100,
         ],
         [
             'id' => 10,
-            'title' => 'Bob',
+            'status' => 200,
         ],
         [
             'id' => 30,
-            'title' => 'Alice',
+            'status' => 100,
         ]
     ];
 
@@ -56,7 +56,7 @@ class SortWithLimitTest extends AbstractTestCase
     public function testMultiOrder()
     {
         $query = $this->createQuery();
-        $query->setOrderBy('title', 'asc');
+        $query->setOrderBy('status', 'asc');
         $query->addOrderBy('id', 'asc');
 
         $result = $query->fetchAll();
