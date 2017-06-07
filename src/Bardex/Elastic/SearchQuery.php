@@ -23,11 +23,19 @@ class SearchQuery extends Query
     protected $whereHelper;
 
 
-    function __clone()
+    public function __clone()
     {
         $this->whereHelper = new Where($this);
     }
 
+    /**
+     * @return SearchQuery
+     */
+    public function fork()
+    {
+        $copy = clone $this;
+        return $copy;
+    }
 
     /**
      * Установить имя индекса для поиска
