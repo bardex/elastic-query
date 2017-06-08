@@ -4,6 +4,7 @@ namespace Bardex\Tests;
 
 use \Bardex\Elastic\SearchQuery;
 use \Bardex\Elastic\Script;
+use Prophecy\Exception\Exception;
 
 class ListenerTest extends AbstractTestCase
 {
@@ -43,18 +44,17 @@ class ListenerTest extends AbstractTestCase
     {
         $listener = $this->getMock(\Bardex\Elastic\IListener::class);
         $query = $this->createQuery();
+
         $script = new \Bardex\Elastic\Script;
         $script->addLine('this script with error');
         $query->whereScript($script); // query with error
+
         $query->addListener($listener);
         $listener->expects($this->once())->method('onError');
         $listener->expects($this->never())->method('onSuccess');
 
-        try {
-            $query->fetchAll(); // query with error
-        }
-        catch (\Exception $e) {
-        }
+        $this->setExpectedException(\Exception::class);
+        $query->fetchAll(); // query with error
     }
 
 }
