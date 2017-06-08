@@ -3,524 +3,170 @@
 namespace Bardex\Elastic;
 
 
+use Elasticsearch\Client as ElasticClient;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
 /**
- * Fluent interface for elasticsearch
+ * Class Query
  * @package Bardex\Elastic
+ * @author Alexey Sumin <bardex@ya.ru>
  */
-class Query implements \JsonSerializable
+abstract class Query
 {
     /**
-     * @var \Elasticsearch\Client $client
+     * @var ElasticClient $client
      */
     protected $elastic;
 
     /**
-     * Параметры запроса
      * @var array
      */
-    protected $params = [];
+    protected $listeners = [];
 
     /**
-     * сколько всего в индексе ES строк удовлетворяющих параметрам поиска
-     * @var integer $totalResults
+     * Получить собранный elasticsearch-запрос
+     * @return array
      */
-    protected $totalResults;
+    abstract public function getQuery();
+
 
     /**
-     * Логгер
-     * @var \Psr\Log\LoggerInterface $logger
+     * Отправить запрос на конкретный endpoint elasticsearch-сервера
+     * @param array $query
+     * @return array
      */
-    protected $logger;
+    abstract protected function executeQuery(array $query);
+
 
     /**
      * Конструктор
-     * @param \Elasticsearch\Client $elastic
-     * @return self $this
+     * @param ElasticClient $elastic
      */
-    public function __construct(\Elasticsearch\Client $elastic)
+    public function __construct(ElasticClient $elastic)
     {
         $this->elastic = $elastic;
-        $this->logger = new \Psr\Log\NullLogger;
-    }
-
-    /**
-     * Добавить Psr-совместимый логгер
-     * @param \Psr\Log\LoggerInterface $logger
-     * @return self $this
-     */
-    public function setLogger(\Psr\Log\LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
-    }
-
-
-    /**
-     * Установить имя индекса для поиска
-     * @param $index
-     * @return self $this
-     */
-    public function setIndex($index)
-    {
-        $this->params['index'] = (string) $index;
-        return $this;
-    }
-
-
-    /**
-     * Установить имя типа для поиска
-     * @param $type
-     * @return self $this
-     */
-    public function setType($type)
-    {
-        $this->params['type'] = (string) $type;
-        return $this;
-    }
-
-
-    /**
-     * Выводить перечисленные поля.
-     * (не обязательный метод, по-умолчанию, выводятся все)
-     * Методы select() и exclude() могут работать совместно.
-     * @param array $fields
-     * @return self $this;
-     * @example $query->select(['id', 'title', 'brand.id', 'brand.title']);
-     */
-    public function select(array $fields)
-    {
-        $this->params['body']['_source']['includes'] = $fields;
-        return $this;
-    }
-
-
-    /**
-     * Добавить в результаты вычисляемое поле, на скриптовом языке painless или groovy
-     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
-     * @param string $fieldName - имя поля в результатах (если такое поле уже есть в документе, то оно будет заменено)
-     * @param string $script - текст скрипта
-     * @param array $params - параметры которые нужно передать в скрипт
-     * @param string $lang - язык скрипта painless или groovy
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/search-request-script-fields.html
-     * @example $query->addScriptField('pricefactor', 'return doc["product.price"].value * params.factor', ['factor' => 2]);
-     * @return self $this
-     */
-    public function addScriptField($fieldName, $script, array $params = null, $lang = 'painless')
-    {
-        $item = [
-            'script' => [
-                'lang'   => $lang,
-                'inline' => $script,
-            ]
-        ];
-        if ($params) {
-            $item['script']['params'] = $params;
-        }
-        $this->params['body']['script_fields'][$fieldName] = $item;
-        return $this;
-    }
-
-
-    /**
-     * Удалить из выборки поля.
-     * (не обязательный метод, по-умолчанию, выводятся все)
-     * Методы select() и exclude() могут работать совместно.
-     * @param array $fields
-     * @return self $this;
-     * @example $query->exclude(['anons', '*.anons']);
-     */
-    public function exclude(array $fields)
-    {
-        $this->params['body']['_source']['excludes'] = $fields;
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр в raw формате, если готовые методы фильтрации не подходят.
-     * Для удобства используй готовые методы фильтрации: where(), whereIn(), whereBetween(), whereMatch()
-     * whereLess() и другие методы where*()
-     *
-     * @param string $type - тип фильтрации (term|terms|match|range)
-     * @param $filter - фильтр
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html
-     * @return self $this
-     */
-    public function addFilter($type, $filter)
-    {
-        if (!isset($this->params['body']['query']['bool']['must'])) {
-            $this->params['body']['query']['bool']['must'] = [];
-        }
-        $this->params['body']['query']['bool']['must'][] = [$type => $filter];
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр точного совпадения, этот фильтр не влияет на поле релевантности _score.
-     *
-     * @param $field - поле по которому фильтруем (id, page.categoryId...)
-     * @param $value - искомое значение
-     * @example $query->where('channel', 1)->where('page.categoryId', 10);
-     * @return self $this;
-     */
-    public function where($field, $value)
-    {
-        $this->addFilter('term', [$field => $value]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр совпадения хотя бы одного значения из набора, этот фильтр не влияет на поле релевантности _score.
-     *
-     * @param $field - поле по которому фильтруем
-     * @param $values - массив допустимых значений
-     * @example $query->whereIn('channel', [1,2,3])->whereIn('page.categoryId', [10,11]);
-     * @return self $this;
-     */
-    public function whereIn($field, array $values)
-    {
-        // потому что ES не понимает дырки в ключах
-        $values = array_values($values);
-        $this->addFilter('terms', [$field => $values]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр вхождения значение в диапазон (обе границы включительно).
-     * Можно искать по диапазону дат.
-     * Этот фильтр не влияет на поле релевантности _score.
-     *
-     * @param $field - поле, по которому фильтруем
-     * @param $min - нижняя граница диапазона (включительно)
-     * @param $max - верхняя граница диапазона (включительно)
-     * @param $dateFormat - необязательное поле описание формата даты
-     * @example $q->whereBetween('created', '01/01/2010', '01/01/2011', 'dd/MM/yyyy');
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-range-query.html
-     * @return self $this;
-     */
-    public function whereBetween($field, $min, $max, $dateFormat = null)
-    {
-        $params = ['gte' => $min, 'lte' => $max];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить в фильтр сложное условие с вычислениями, на скриптовом языке painless или groovy.
-     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
-     *
-     * @param string $script - скрипт
-     * @param array $params - параметры передаваемые в скрипт
-     * @param string $lang - язык painless или groovy
-     * @return self $this;
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-script-query.html
-     * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/modules-scripting-painless.html
-     * @example $query->whereScript('doc["id"].value == params.id', ['id' => 5169]);
-     */
-    public function whereScript($script, array $params = null, $lang = 'painless')
-    {
-        $item = [
-            'script' => [
-                'inline' => $script,
-                'lang'   => $lang
-            ]
-        ];
-        if ($params) {
-            $item['script']['params'] = $params;
-        }
-        $this->addFilter('script', $item);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр "больше или равно"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereGreaterOrEqual("price", 100)
-     * @example $query->whereGreaterOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereGreaterOrEqual("seller.rating", 4)
-     */
-    public function whereGreaterOrEqual($field, $value, $dateFormat = null)
-    {
-        $params = ['gte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-    /**
-     * Добавить фильтр "больше чем"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereGreater("price", 100)
-     * @example $query->whereGreater("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereGreater("seller.rating", 4)
-     */
-    public function whereGreater($field, $value, $dateFormat = null)
-    {
-        $params = ['gt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-    /**
-     * Добавить фильтр "меньше или равно"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - необязательный формат даты
-     * @return self $this
-     * @example $query->whereLessOrEqual("price", 100)
-     * @example $query->whereLessOrEqual("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereLessOrEqual("seller.rating", 4)
-     */
-    public function whereLessOrEqual($field, $value, $dateFormat = null)
-    {
-        $params = ['lte' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр "меньше чем"
-     * @param $field - поле
-     * @param $value - значение
-     * @param null $dateFormat - - необязательный формат даты
-     * @return self $this
-     * @example $query->whereLess("price", 100)
-     * @example $query->whereLess("created", "31/12/2016" , "dd/MM/yyyy")
-     * @example $query->whereLess("seller.rating", 4)
-     */
-    public function whereLess($field, $value, $dateFormat = null)
-    {
-        $params = ['lt' => $value];
-        if ($dateFormat) {
-            $params['format'] = $dateFormat;
-        }
-        $this->addFilter('range', [$field => $params]);
-        return $this;
-    }
-
-
-    /**
-     * Добавить фильтр полнотекстового поиска, этот фильтр влияет на поле релевантности _score.
-     *
-     * @param string|arary $field - поле (или массив полей) по которому ищем
-     * @param $text - поисковая фраза
-     * @example $query->whereMatch('title', 'яблочная слойка')->setOrderBy('_score', 'desc');
-     * @example $query->whereMatch(['title', 'anons'], 'яблочная слойка')->setOrderBy('_score', 'desc');
-     * @return self $this;
-     */
-    public function whereMatch($field, $text)
-    {
-        if (is_array($field)) {
-            $this->addFilter('multi_match', [
-                    'query'  => $text,
-                    'fields' => $field
-                ]);
-        } else {
-            $this->addFilter('match', [$field => $text]);
-        }
-        return $this;
-    }
-
-    /**
-     * Установить поле сортировки.
-     * Для сортировки по релевантности существует псевдополе _score (значение больше - релевантность лучше)
-     * @param $field - поле сортировки
-     * @param string $order - направление сортировки asc|desc
-     * @example $query->setOrderBy('_score', 'desc');
-     * @return self $this
-     */
-    public function setOrderBy($field, $order = 'asc')
-    {
-        $this->params['body']['sort'] = [];
-        $this->addOrderBy($field, $order);
-        return $this;
-    }
-
-    /**
-     * Добавить поле сортировки.
-     * Для сортировки по релевантности существует псевдополе _score (значение больше - релевантность лучше)
-     * @param $field - поле сортировки
-     * @param string $order - направление сортировки asc|desc
-     * @example $query->addOrderBy('_score', 'desc');
-     * @example $query->addOrderBy('seller.rating', 'desc');
-     * @return self $this
-     */
-    public function addOrderBy($field, $order = 'asc')
-    {
-        $field = (string) $field;
-        $order = (string) $order;
-        if (!isset($this->params['body']['sort'])) {
-            $this->params['body']['sort'] = [];
-        }
-        $this->params['body']['sort'][] = [$field => ['order' => $order]];
-        return $this;
-    }
-
-
-    /**
-     * Установить лимиты выборки
-     * @param $limit - сколько строк выбирать
-     * @param int $offset - сколько строк пропустить
-     * @return self $this;
-     */
-    public function limit($limit, $offset = 0)
-    {
-        $this->params['size'] = (int) $limit;
-        $this->params['from'] = (int) $offset;
-        return $this;
-    }
-
-
-    /**
-     * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
-     * @return array возвращает необработанный ответ ES
-     */
-    public function fetchRaw()
-    {
-        $this->totalResults;
-
-        // build query
-        $query  = $this->getQuery();
-
-        // send query to elastic
-        $start  = microtime(1);
-
-        $result = $this->elastic->search($query);
-
-        // measure time
-        $time   = round((microtime(1) - $start) * 1000);
-
-        // total results
-        $this->totalResults = $result['hits']['total'];
-
-        // log
-        $index = $this->params['index'].'/'.$this->params['type'];
-        $context = [
-            'type'  => 'elastic',
-            'query' => json_encode($query),
-            'time'  => $time,
-            'index' => $index,
-            'found_rows'   => $this->totalResults,
-            'fetched_rows' => count($result['hits']['hits'])
-        ];
-
-        $this->logger->debug("Elastic query (index: $index, time: $time ms)", $context);
-
-        return $result;
     }
 
 
     /**
      * Выполнить запрос к ES и вернуть результаты поиска.
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
-     * @return array - возвращает набор документов
+     * @return SearchResult - возвращает набор документов
      */
     public function fetchAll()
     {
-        $result = $this->fetchRaw();
+        $response = $this->fetchRaw();
+        $result = $this->createSearchResult($response);
+        return $result;
+    }
 
+
+    /**
+     * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
+     * @return array возвращает необработанный ответ ES
+     */
+    public function fetchRaw()
+    {
+        // build query
+        $query = $this->getQuery();
+
+        // send query to elastic
+        $start  = microtime(1);
+
+        try {
+            $result = $this->executeQuery($query);
+            $time   = round((microtime(1) - $start) * 1000);
+            $this->triggerSuccess($query, $result, $time);
+            return $result;
+        }
+        catch (\Exception $e) {
+            $this->triggerError($query, $e);
+            throw $e;
+        }
+    }
+
+
+    /**
+     * Создать из ответа ES-сервера экземляр SearchResult
+     * @param array $response
+     * @return SearchResult
+     */
+    protected function createSearchResult(array $response)
+    {
+        $results  = $this->extractDocuments($response);
+        $total    = $this->extractTotal($response);
+        $searchResult = new SearchResult($results, $total);
+        return $searchResult;
+    }
+
+    /**
+     * Выбрать документы из ответа ES-сервера и добавить script fields.
+     * @param array $response - ответ ES сервера.
+     * @return array - возвращает набор документов
+     */
+    protected function extractDocuments(array $response)
+    {
         $results = [];
-        foreach ($result['hits']['hits'] as $hit) {
-            $row = $hit['_source'];
-            if (isset($hit['fields'])) { // script fields
-                foreach ($hit['fields'] as $field => $data) {
-                    if (count($data) == 1) {
-                        $row[$field] = array_shift($data);
-                    } else {
-                        $row[$field] = $data;
+        if (isset($response['hits']['hits'])) {
+            foreach ($response['hits']['hits'] as $hit) {
+                $row = $hit['_source'];
+                if (isset($hit['fields'])) { // script fields
+                    foreach ($hit['fields'] as $field => $data) {
+                        if (count($data) == 1) {
+                            $row[$field] = array_shift($data);
+                        } else {
+                            $row[$field] = $data;
+                        }
                     }
                 }
+                $results[] = $row;
             }
-            $results[] = $row;
         }
-
         return $results;
     }
 
 
     /**
-     * Выполнить запрос к ES и вернуть первый результат.
-     * Внимание! для экономии памяти результаты не хранятся в этом объекте, а сразу возвращаются.
-     * Чтобы получить кол-во строк всего найденных в индексе (без учета лимита), используй метод getTotalResults()
-     * @return array|null возращает первый найденный документ или null.
+     * Выбрать из ответа ES-сервера количество найденных документов.
+     * @param array $response - ответ ES сервера.
+     * @return integer - возвращает количество найденных документов.
      */
-    public function fetchOne()
+    protected function extractTotal(array $response)
     {
-        $results = $this->fetchAll();
-        if (count($results)) {
-            return array_shift($results);
-        } else {
-            return null;
+        $total = 0;
+        if (isset($response['hits']['total'])) {
+            $total = $response['hits']['total'];
+        }
+        return $total;
+    }
+
+    public function addListener(IListener $listener)
+    {
+        $this->listeners[] = $listener;
+        return $this;
+    }
+
+    public function removeListener(IListener $listener)
+    {
+        foreach ($this->listeners as $i => $listItem) {
+            if ($listener === $listItem) {
+                unset($this->listeners[$i]);
+            }
+        }
+        return $this;
+    }
+
+    protected function triggerSuccess(array $query, array $response, $time)
+    {
+        foreach ($this->listeners as $listener) {
+            $listener->onSuccess($query, $response, $time);
         }
     }
 
-
-    /**
-     * Количество документов всего найденных в индексе, для последнего запроса.
-     * @return integer количество найденных документов
-     */
-    public function getTotalResults()
+    protected function triggerError(array $query, \Exception $e)
     {
-        return $this->totalResults;
-    }
-
-
-    /**
-     * Получить собранный запрос
-     * @return array
-     */
-    public function getQuery()
-    {
-        $params = $this->params;
-
-        if (!isset($params['body']['_source'])) {
-            $params['body']['_source'] = true;
+        foreach ($this->listeners as $listener) {
+            $listener->onError($query, $e);
         }
-
-        return $params;
-    }
-
-    /**
-     * Имплементация \JsonSerializable
-     * @return array
-     */
-    public function jsonSerialize() {
-        return $this->getQuery();
-    }
-
-
-    /**
-     * Получить JSON-дамп запроса для отладки
-     * @return string
-     */
-    public function getJsonQuery()
-    {
-        return json_encode($this);
     }
 }

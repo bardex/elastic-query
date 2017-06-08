@@ -2,7 +2,7 @@
 
 namespace Bardex\Tests;
 
-use Bardex\Elastic\Query;
+use Bardex\Elastic\SearchQuery;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -40,9 +40,10 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+
     protected function createQuery()
     {
-        $query = new Query(static::$client);
+        $query = new SearchQuery(static::$client);
         $query->setIndex(static::$indexName)
               ->setType(static::$typeName);
 
