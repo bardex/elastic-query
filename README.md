@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/bardex/elastic-query.svg?branch=devel)](https://travis-ci.org/bardex/elastic-query)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bardex/elastic-query/badges/quality-score.png?b=devel)](https://scrutinizer-ci.com/g/bardex/elastic-query/?branch=devel)
-[![Coverage Status](https://coveralls.io/repos/github/bardex/elastic-query/badge.svg?branch=devel&v=1)](https://coveralls.io/github/bardex/elastic-query?branch=devel&v=1)
+[![Coverage Status](https://coveralls.io/repos/github/bardex/elastic-query/badge.svg?branch=devel&v=2)](https://coveralls.io/github/bardex/elastic-query?branch=devel&v=2)
 
 ## Examples
 Simple search
@@ -22,6 +22,8 @@ $query->setIndex('products')
   ->where('rubric')->in([1,5,7])
   ->where('price')->greater(0)
   ->where(['title','anons'])->match('погремушка')
+  ->where('status')->not(0)
+  ->where('tags')->notIn([1,2,3])
   ->exclude(['anons', 'comments.*'])
   ->setOrderBy('rating', 'desc')
   ->addOrderBy('dateCreation', 'desc')
