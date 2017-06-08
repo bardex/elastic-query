@@ -56,4 +56,18 @@ class SortWithLimitTest extends AbstractTestCase
         $this->assertEquals(10, $result[3]['id']);
     }
 
+    public function testAddOrderBy()
+    {
+        $query = $this->createQuery();
+        $query->addOrderBy('id', 'asc');
+
+        $result = $query->fetchAll();
+
+        $this->assertCount(4, $result);
+        $this->assertEquals(2, $result[0]['id']);
+        $this->assertEquals(10, $result[1]['id']);
+        $this->assertEquals(20,  $result[2]['id']);
+        $this->assertEquals(30, $result[3]['id']);
+    }
+
 }
