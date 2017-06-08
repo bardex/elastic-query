@@ -142,4 +142,13 @@ class Where
         return $this->query;
     }
 
+    /**
+     * Поле существует и имеет не null значение
+     * @return SearchQuery
+     */
+    public function exists()
+    {
+        $this->query->addFilter('exists', ["field" => $this->field]);
+        return $this->query;
+    }
 }

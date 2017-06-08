@@ -106,8 +106,6 @@ class SearchQuery extends Query
 
     /**
      * Добавить фильтр в raw формате, если готовые методы фильтрации не подходят.
-     * Для удобства используй готовые методы фильтрации: where(), whereIn(), whereBetween(), whereMatch()
-     * whereLess() и другие методы where*()
      *
      * @param string $type - тип фильтрации (term|terms|match|range)
      * @param $filter - фильтр

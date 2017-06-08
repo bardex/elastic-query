@@ -25,7 +25,7 @@ class WhereTest extends AbstractTestCase
             'id' => 10,
             'title' => 'title Bob record',
             'anons' => 'Bob is Alice friend',
-            'channels' => [1],
+            'channels' => [],
             'publicDate' => '2016-12-31T23:00:00+03:00',
         ]
     ];
@@ -34,7 +34,7 @@ class WhereTest extends AbstractTestCase
         ['name' => 'equal', 'method' => 'equal', 'field' => 'id',       'params' => [20],      'validCount' => 1, 'validId' => [20]],
         ['name' => 'in',    'method' => 'in',    'field' => 'channels', 'params' => [[2]],     'validCount' => 1, 'validId' => [20]],
         ['name' => 'match', 'method' => 'match', 'field' => 'title',    'params' => ['alice'], 'validCount' => 1, 'validId' => [20]],
-        ['name' => 'match multi fields', 'method' => 'match', 'field' => ['title','anons'], 'params' => ['alice'], 'validCount' => 2, 'validId' => [20, 10]],
+        ['name' => 'exists', 'method' => 'exists',    'field' => 'channels', 'params' => [], 'validCount' => 2, 'validId' => [20,2]],
         ['name' => 'between',      'method' => 'between', 'field' => 'id', 'params' => [15, 25], 'validCount' => 1, 'validId' => [20]],
         ['name' => 'greater',      'method' => 'greater', 'field' => 'id', 'params' => [15], 'validCount' => 1, 'validId' => [20]],
         ['name' => 'greaterEqual', 'method' => 'greaterOrEqual', 'field' => 'id', 'params' => [10], 'validCount' => 2, 'validId' => [10,20]],
@@ -45,6 +45,7 @@ class WhereTest extends AbstractTestCase
         ['name' => 'greaterEqual date', 'method' => 'greaterOrEqual', 'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 2, 'validId' => [10,20]],
         ['name' => 'less date',         'method' => 'less',           'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 1, 'validId' => [2]],
         ['name' => 'lessEqual date',    'method' => 'lessOrEqual',    'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 2, 'validId' => [10,2]],
+        ['name' => 'match multi fields', 'method' => 'match', 'field' => ['title','anons'], 'params' => ['alice'], 'validCount' => 2, 'validId' => [20, 10]],
     ];
 
     public function testInstanceOf()
