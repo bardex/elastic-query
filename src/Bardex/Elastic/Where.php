@@ -117,7 +117,9 @@ class Where
 
     protected function range($params, $dateFormat=null)
     {
-        if ($dateFormat) $params['format'] = $dateFormat;
+        if ($dateFormat) {
+            $params['format'] = $dateFormat;
+        }
         $this->query->addFilter('range', [$this->field => $params]);
         return $this->query;
     }
@@ -149,6 +151,64 @@ class Where
     public function exists()
     {
         $this->query->addFilter('exists', ["field" => $this->field]);
+        return $this->query;
+    }
+
+    /**
+     * @param $value
+     * @return SearchQuery
+     */
+    public function not($value)
+    {
+        $this->query->addNotFilter('term', [$this->field => $value]);
+        return $this->query;
+    }
+
+
+    /**
+     * @param $values - массив допустимых значений
+     * @example $query->where('channel')->notIn([1,2,3]);
+     * @return SearchQuery;
+     */
+    public function notIn(array $values)
+    {
+        // потому что ES не понимает дырки в ключах
+        $values = array_values($values);
+        $this->query->addNotFilter('terms', [$this->field => $values]);
+        return $this->query;
+    }
+
+
+    /**
+     * @param $min
+     * @param $max
+     * @param null $dateFormat
+     * @return SearchQuery
+     */
+    public function notBetween($min, $max, $dateFormat = null)
+    {
+        $params = ['gte' => $min, 'lte' => $max];
+        if ($dateFormat) {
+            $params['format'] = $dateFormat;
+        }
+        $this->query->addNotFilter('range', [$this->field => $params]);
+        return $this->query;
+    }
+
+    /**
+     * @param $text
+     * @return SearchQuery
+     */
+    public function notMatch($text)
+    {
+        if (is_array($this->field)) {
+            $this->query->addNotFilter('multi_match', [
+                'query'  => $text,
+                'fields' => $this->field
+            ]);
+        } else {
+            $this->query->addNotFilter('match', [$this->field => $text]);
+        }
         return $this->query;
     }
 }

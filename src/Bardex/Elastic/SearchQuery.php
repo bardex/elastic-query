@@ -121,6 +121,23 @@ class SearchQuery extends Query
         return $this;
     }
 
+    /**
+     * Добавить отрицательный фильтр в raw формате, если готовые методы фильтрации не подходят.
+     *
+     * @param string $type - тип фильтрации (term|terms|match|range)
+     * @param $filter - фильтр
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html
+     * @return self $this
+     */
+    public function addNotFilter($type, $filter)
+    {
+        if (!isset($this->params['body']['query']['bool']['must_not'])) {
+            $this->params['body']['query']['bool']['must_not'] = [];
+        }
+        $this->params['body']['query']['bool']['must_not'][] = [$type => $filter];
+        return $this;
+    }
+
 
     /**
      * Создать фильтр.
