@@ -211,4 +211,13 @@ class Where
         }
         return $this->query;
     }
+
+    /**
+     * @return SearchQuery
+     */
+    public function notExists()
+    {
+        $this->query->addNotFilter('exists', ["field" => $this->field]);
+        return $this->query;
+    }
 }

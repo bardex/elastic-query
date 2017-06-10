@@ -31,6 +31,7 @@ class WhereNotTest extends AbstractTestCase
     protected $mytests = [
         ['name' => 'not equal',   'method' => 'not',        'field' => 'id',  'params' => [10], 'validCount' => 2, 'validId' => [2,20]],
         ['name' => 'not in',      'method' => 'notIn',      'field' => 'id',  'params' => [[10,20]], 'validCount' => 1, 'validId' => [2]],
+        ['name' => 'not exists',  'method' => 'notExists',  'field' => 'channels', 'params' => [], 'validCount' => 1, 'validId' => [10]],
         ['name' => 'not between', 'method' => 'notBetween', 'field' => 'id',  'params' => [10,20], 'validCount' => 1, 'validId' => [2]],
         ['name' => 'not between date', 'method' => 'notBetween', 'field' => 'publicDate', 'params' => ['2016-12-31T23:00:00+03:00','2016-12-31T23:00:00+03:00', 'date_time_no_millis'], 'validCount' => 2, 'validId' => [2,20]],
         ['name' => 'not match',   'method' => 'notMatch',   'field' => 'title',  'params' => ['alice'], 'validCount' => 2, 'validId' => [2,10]],
