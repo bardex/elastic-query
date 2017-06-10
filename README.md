@@ -130,8 +130,8 @@ $query->fetchAll();
 ?>
 ```
 
-USING A PROTOTYPE TO CREATE QUERIES
------------------------------------
+USING PROTOTYPE FOR CREATION QUERY OBJECTS
+------------------------------------------
 You can use one or more pre-configured prototypes for creating queries. 
 You can declare a prototype in a container or service locator.
 
@@ -173,7 +173,7 @@ $results = $multiQuery->fetchAll();
 ```
 
 
-AVAILABLE FILTERING METHODS
+AVAILABLE FILTERING METHODS (in SearchQuery)
 ---------------------------
 
 - equal($value)
