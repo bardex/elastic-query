@@ -23,7 +23,7 @@ QUICK START
 <?php
 
 $elastic = \Elasticsearch\ClientBuilder::create()
-           ->setHosts('localhost')
+           ->setHosts(['localhost'])
            ->build();
 
 $query = new \Bardex\Elastic\SearchQuery($elastic);
@@ -71,7 +71,7 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-sea
 <?php
 
 $elastic = \Elasticsearch\ClientBuilder::create()
-           ->setHosts('localhost')
+           ->setHosts(['localhost'])
            ->build();
 
 $posts = new \Bardex\Elastic\SearchQuery($elastic);
@@ -105,7 +105,7 @@ USING LISTENER FOR LOGGING
 ```PHP
 <?php
 $elastic = \Elasticsearch\ClientBuilder::create()
-           ->setHosts('localhost')
+           ->setHosts(['localhost'])
            ->build();
 
 $logger = new Logger; // some logger implemented \Psr\Log\LoggerInterface, like Monolog.
@@ -138,7 +138,7 @@ You can declare a prototype in a container or service locator.
 ```PHP
 <?php
 $elastic = \Elasticsearch\ClientBuilder::create()
-           ->setHosts('localhost')
+           ->setHosts(['localhost'])
            ->build();
 
 $prototype = new \Bardex\Elastic\PrototypeQuery($elastic);
@@ -175,7 +175,52 @@ $results = $multiQuery->fetchAll();
 
 AVAILABLE FILTERING METHODS
 ---------------------------
-TODO
+```
+equal($value)
+in([$v1,$v2,...])
+less($max)
+lessOrEqual($max)
+greater($min)
+greaterOrEqual($min)
+between($min, $max)
+
+// full-text search
+match($text)
+
+// date compare
+less($dateEnd, $dateFormat)
+lessOrEqual($dateEnd, $dateFormat)
+greater($dateStart, $dateFormat)
+greaterOrEqual($dateStart, $dateFormat)
+between($start, $end, $dateFormat)
+
+// field exists and not empty 
+exists($field)
+
+// negative
+not($value)
+notIn([$v1,$v2,...])
+notBetween($min, $max)
+notMatch($text)
+notExists($field)
+```
+
+Also see class \Bardex\Elastic\Where.
+Date format see https://www.elastic.co/guide/en/elasticsearch/reference/5.0/mapping-date-format.html
+Exists filter https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-exists-query.html
+
+*Examples*
+```PHP
+<?php
+
+$query->where('id')->equal(10)
+        ->where('category')->in([1,5,3])
+        ->where('title')->match('game') // full-text search
+        ->where(['title','anons'])->match('game') // full-text search by multi fields
+        ->where('price')->between(100,1000) // min and max values included
+
+?>
+```
 
 USING SCRIPT-FIELDS
 -------------------
@@ -188,4 +233,15 @@ TODO
 
 DEBUGGING
 ---------
-TODO
+Get prepared elastic query as php-array:
+```PHP
+<?php
+    $query->getQuery();
+?>
+```
+Get raw response from ElasticSearch server:
+```PHP
+<?php
+    $query->fetchRaw();
+?>
+```
