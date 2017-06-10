@@ -2,8 +2,6 @@
 
 namespace Bardex\Elastic;
 
-use Bardex\Elastic\SearchResult;
-
 
 /**
  * Fluent interface for ElasticSearch

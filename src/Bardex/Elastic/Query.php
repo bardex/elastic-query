@@ -3,27 +3,13 @@
 namespace Bardex\Elastic;
 
 
-use Elasticsearch\Client as ElasticClient;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
-
 /**
  * Class Query
  * @package Bardex\Elastic
  * @author Alexey Sumin <bardex@ya.ru>
  */
-abstract class Query
+abstract class Query extends PrototypeQuery
 {
-    /**
-     * @var ElasticClient $client
-     */
-    protected $elastic;
-
-    /**
-     * @var array
-     */
-    protected $listeners = [];
-
     /**
      * Получить собранный elasticsearch-запрос
      * @return array
@@ -37,16 +23,6 @@ abstract class Query
      * @return array
      */
     abstract protected function executeQuery(array $query);
-
-
-    /**
-     * Конструктор
-     * @param ElasticClient $elastic
-     */
-    public function __construct(ElasticClient $elastic)
-    {
-        $this->elastic = $elastic;
-    }
 
 
     /**
@@ -138,22 +114,6 @@ abstract class Query
             $total = $response['hits']['total'];
         }
         return $total;
-    }
-
-    public function addListener(IListener $listener)
-    {
-        $this->listeners[] = $listener;
-        return $this;
-    }
-
-    public function removeListener(IListener $listener)
-    {
-        foreach ($this->listeners as $i => $listItem) {
-            if ($listener === $listItem) {
-                unset($this->listeners[$i]);
-            }
-        }
-        return $this;
     }
 
     protected function triggerSuccess(array $query, array $response, $time)
