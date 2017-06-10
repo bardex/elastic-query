@@ -45,7 +45,7 @@ $results = $query->fetchAll();
 $countResults = count($results);
 
 // count of total found results
-$totalFound = $results->getTotalCount();
+$totalFound = $results->getTotalFound();
 
 // iterate results
 foreach ($results as $result) {
@@ -96,7 +96,7 @@ $result = $multi->fetchAll();
 // instance of \Bardex\Elastic\SearchQuery
 $user  = $result['user'];
 $posts = $result['posts'];
-$totalPosts = $posts->getTotalCount();
+$totalPosts = $posts->getTotalFound();
 ?>
 ```
 
@@ -132,7 +132,7 @@ $query->fetchAll();
 
 USING A PROTOTYPE TO CREATE QUERIES
 -----------------------------------
-you can use one or more pre-configured prototypes for creating queries. 
+You can use one or more pre-configured prototypes for creating queries. 
 You can declare a prototype in a container or service locator.
 
 ```PHP

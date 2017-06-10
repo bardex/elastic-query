@@ -26,7 +26,7 @@ class SearchResultTest extends AbstractTestCase
         $this->assertCount($limit, $result);
 
         // test total count
-        $this->assertEquals($total, $result->getTotalCount());
+        $this->assertEquals($total, $result->getTotalFound());
 
         // test get first
         $this->assertEquals($testResults[0], $result->getFirst());

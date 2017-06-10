@@ -12,9 +12,9 @@ namespace Bardex\Elastic;
 class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
-     * @var  int $totalCount
+     * @var  int
      */
-    protected $totalCount;
+    protected $totalFound;
 
     /**
      * @var array|array[]|object[] $results
@@ -22,11 +22,11 @@ class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
     protected $results = [];
 
 
-    public function __construct($results, $totalCount)
+    public function __construct($results, $totalFound)
     {
         $results = (array) $results;
         $this->results = $results;
-        $this->totalCount = $totalCount;
+        $this->totalFound = $totalFound;
     }
 
     /**
@@ -69,10 +69,21 @@ class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return int
      */
+    public function getTotalFound()
+    {
+        return $this->totalFound;
+    }
+
+    /**
+     * @deprecated
+     * @return int
+     */
     public function getTotalCount()
     {
-        return $this->totalCount;
+        return $this->getTotalFound();
     }
+
+
 
     /**
      * Method determines, if result data set is empty.

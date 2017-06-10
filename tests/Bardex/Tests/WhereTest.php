@@ -66,7 +66,7 @@ class WhereTest extends AbstractTestCase
             $this->assertInstanceOf(SearchResult::class, $results);
 
             $this->assertCount($test['validCount'], $results, "test method: ".$test['name']);
-            $this->assertEquals($test['validCount'], $results->getTotalCount(), "test method: ".$test['name']);
+            $this->assertEquals($test['validCount'], $results->getTotalFound(), "test method: ".$test['name']);
             foreach ($results as $result) {
                 $this->assertContains($result['id'], $test['validId'], "test method: ".$test['name']);
             }
