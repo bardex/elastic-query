@@ -175,50 +175,45 @@ $results = $multiQuery->fetchAll();
 
 AVAILABLE FILTERING METHODS
 ---------------------------
-```
-equal($value)
-in([$v1,$v2,...])
-less($max)
-lessOrEqual($max)
-greater($min)
-greaterOrEqual($min)
-between($min, $max)
 
-// full-text search
-match($text)
+- equal($value)
+- in([$v1,$v2,...])
+- less($max)
+- lessOrEqual($max)
+- greater($min)
+- greaterOrEqual($min)
+- between($min, $max)
 
-// date compare
-less($dateEnd, $dateFormat)
-lessOrEqual($dateEnd, $dateFormat)
-greater($dateStart, $dateFormat)
-greaterOrEqual($dateStart, $dateFormat)
-between($start, $end, $dateFormat)
+- match($text) - full-text search
 
-// field exists and not empty 
-exists($field)
+- less($dateEnd, $dateFormat)
+- lessOrEqual($dateEnd, $dateFormat)
+- greater($dateStart, $dateFormat)
+- greaterOrEqual($dateStart, $dateFormat)
+- between($start, $end, $dateFormat)
 
-// negative
-not($value)
-notIn([$v1,$v2,...])
-notBetween($min, $max)
-notMatch($text)
-notExists($field)
-```
+- exists() - field exists and not empty
 
-Also see class \Bardex\Elastic\Where.
-Date format see https://www.elastic.co/guide/en/elasticsearch/reference/5.0/mapping-date-format.html
-Exists filter https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-exists-query.html
+- not($value) - not equal
+- notIn([$v1,$v2,...])
+- notBetween($min, $max)
+- notMatch($text) - text not match
+- notExists() - field not exists or empty
+
+
+Also see class \Bardex\Elastic\Where.  
+Date format see https://www.elastic.co/guide/en/elasticsearch/reference/5.0/mapping-date-format.html  
+Exists filter https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-exists-query.html  
 
 *Examples*
 ```PHP
 <?php
-
 $query->where('id')->equal(10)
         ->where('category')->in([1,5,3])
-        ->where('title')->match('game') // full-text search
         ->where(['title','anons'])->match('game') // full-text search by multi fields
         ->where('price')->between(100,1000) // min and max values included
-
+        ->where('date_creation')->greater('2017-01-31T23:00:00+03:00', 'date_time_no_millis')
+        ->where('refunds')->notExists();
 ?>
 ```
 
