@@ -133,7 +133,6 @@ $query->fetchAll();
 USING PROTOTYPE FOR CREATION QUERY OBJECTS
 ------------------------------------------
 You can use one or more pre-configured prototypes for creating queries. 
-You can declare a prototype in a container or service locator.
 
 ```PHP
 <?php
@@ -169,6 +168,32 @@ $multiQuery->addQuery('user', $user);
 $multiQuery->addQuery('posts', $posts);
 $results = $multiQuery->fetchAll();        
 
+?>
+```
+
+```PHP
+<?php
+class UserElasticRepository 
+{
+   /**
+    * @var \Bardex\Elastic\PrototypeQuery  
+    */
+    protected $elastic;
+    
+    public function __construct(\Bardex\Elastic\PrototypeQuery $elastic) 
+    {
+        $this->elastic = $elastic;    
+    }
+    
+    public function findById($id)
+    {
+        return $this->elastic->createSearchQuery()
+                             ->where('id')->equal($id)
+                             ->limit(1)
+                             ->fetchAll()
+                             ->getFirst();
+    }
+}
 ?>
 ```
 
@@ -217,13 +242,87 @@ $query->where('id')->equal(10)
 ?>
 ```
 
+FETCH SPECIFIED FIELDS 
+----------------------
+Methods select() and exclude() can be used together.
+```PHP
+<?php
+    $query->select(['id', 'title', 'comments.*', 'categories.*'])
+          ->exclude(['description', '*.description']);
+?>
+```
+
+LIMIT FETCH DOCUMENTS 
+----------------------
+```PHP
+<?php
+    $query->limit($limit, $offset);
+?>
+```
+
+SORT DOCUMENTS 
+----------------------
+```PHP
+<?php
+    $query->setOrderBy('date_creation', 'desc'); // clear old order and set new order
+    $query->addOrderBy('rating', 'desc'); // add order
+?>
+```
+
+
 USING SCRIPT-FIELDS
 -------------------
-TODO
+Also see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-script-fields.html  
+Method searchQuery::fetchAll() merge script fields with fields of documents. 
+```PHP
+<?php 
+    // script return scalar
+    $script = new \Bardex\Elastic\Script();
+    $script->addLine('def a = 100;');
+    $script->addLine('return a;'); // return scalar
+
+    $query->addScriptField('fieldName', $script);
+    $result = $query->fetchAll()->getFirst();
+    echo $result['fieldName']; // 100
+    
+    // script return array
+    $script = new \Bardex\Elastic\Script();
+    $script->addLine('def a = 100;');
+    $script->addLine('def b = 200;');
+    $script->addLine('return [a,b];'); // return array
+    
+    $query->addScriptField('fieldName', $script);
+    $result = $query->fetchAll()->getFirst();
+    print_r($result['fieldName']); // [100, 200]
+?>
+```
+Use documents values and script params.  
+Also see:  
+https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting-expression.html  
+```PHP
+<?php
+    $script = new Script();
+    $script->addLine("return  doc['id'].value * params.power;");
+    $script->addParam('power', 1000);
+    $query->addScriptField('pid', $script);
+    $row = $query->fetchAll()->getFirst();
+    echo $row['id']; // 2
+    echo $row['pid']; // 2000
+?>
+```
  
 USING SCRIPT-FILTERS
 -------------------
-TODO
+Also see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-script-query.html  
+```PHP
+<?php
+    $script = new Script();
+    $script->addLine("return doc['price'].value * (1 + doc['tax'].value / 100) < params.max_price;");
+    $script->addParam('max_price', 10000);
+    $query->whereScript($script);
+    $rows = $query->fetchAll();
+?>
+```
 
 
 DEBUGGING
