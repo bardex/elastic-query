@@ -188,6 +188,8 @@ class UserElasticRepository
     public function findById($id)
     {
         return $this->elastic->createSearchQuery()
+                             ->setIndex('users')
+                             ->setType('users')
                              ->where('id')->equal($id)
                              ->limit(1)
                              ->fetchAll()
