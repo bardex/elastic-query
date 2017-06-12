@@ -1,5 +1,6 @@
 {
   "name": "bardex/elastic-query",
+  "description": "PHP query builder for ElasticSearch with fluent interface",
   "authors": [
     {
       "name": "Alexey Sumin",
