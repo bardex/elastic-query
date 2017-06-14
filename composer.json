@@ -4,7 +4,13 @@
   "authors": [
     {
       "name": "Alexey Sumin",
-      "email": "bardex@ya.ru"
+      "email": "bardex@ya.ru",
+      "role": "Developer"
+    },
+    {
+      "name": "Andrey Volynov",
+      "email": "dubpubz@gmail.com",
+      "role": "Developer"
     }
   ],
   "minimum-stability": "stable",
