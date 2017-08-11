@@ -144,7 +144,7 @@ class WhereTest extends AbstractTestCase
         [
             'name' => 'wildcard',
             'method' => 'wildcard',
-            'field' => ['title'],
+            'field'  => 'title',
             'params' => ['Happy*'],
             'validCount' => 1,
             'validId' => [2]
