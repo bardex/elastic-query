@@ -8,7 +8,7 @@ class WhereRegExpTest extends AbstractTestCase
     protected static $testdata = [
         [
             'id' => 2,
-            'title' => 'Happy',
+            'title' => 'HAPpy',
         ],
         [
             'id' => 20,
@@ -25,17 +25,33 @@ class WhereRegExpTest extends AbstractTestCase
             'name' => 'wildcard',
             'method' => 'wildcard',
             'field'  => 'title',
-            'params' => ['Nat*'],
+            'params' => ['ha*y'],
             'validCount' => 1,
-            'validId' => [20]
+            'validId' => [2]
         ],
         [
             'name' => 'regexp',
             'method' => 'regexp',
             'field'  => 'title',
-            'params' => ['^Hap.*'],
+            'params' => ['nat.*n'],
             'validCount' => 1,
-            'validId' => [2]
+            'validId' => [20]
+        ],
+        [
+            'name' => 'regexp with flags',
+            'method' => 'regexp',
+            'field'  => 'title',
+            'params' => ['nat.*n', 'NONE'],
+            'validCount' => 1,
+            'validId' => [20]
+        ],
+        [
+            'name' => 'regexp limit options',
+            'method' => 'regexp',
+            'field'  => 'title',
+            'params' => ['nat.*n', null, 100],
+            'validCount' => 1,
+            'validId' => [20]
         ],
     ];
 

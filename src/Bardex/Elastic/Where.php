@@ -219,6 +219,8 @@ class Where
     }
 
     /**
+     * маска должна указываться в нижнем регистре, см. оф.документацию
+     * Внимание! низкая производительность
      * @param $mask
      * @return SearchQuery
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-wildcard-query.html
@@ -230,6 +232,8 @@ class Where
     }
 
     /**
+     * Регулярное выражение должно указываться в нижнем регистре, см. оф.документацию
+     * Внимание! низкая производительность
      * @param $regexp
      * @return SearchQuery
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
