@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 /**
  * Class Query
@@ -40,6 +37,7 @@ abstract class Query extends PrototypeQuery
     /**
      * Выполнить запрос к ES и вернуть необработанный результат (с мета-данными).
      * @return array возвращает необработанный ответ ES
+     * @throws \Exception
      */
     public function fetchRaw()
     {
@@ -47,15 +45,14 @@ abstract class Query extends PrototypeQuery
         $query = $this->getQuery();
 
         // send query to elastic
-        $start  = microtime(1);
+        $start = microtime(1);
 
         try {
             $result = $this->executeQuery($query);
-            $time   = round((microtime(1) - $start) * 1000);
+            $time = round((microtime(1) - $start) * 1000);
             $this->triggerSuccess($query, $result, $time);
             return $result;
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->triggerError($query, $e);
             throw $e;
         }
@@ -69,8 +66,8 @@ abstract class Query extends PrototypeQuery
      */
     protected function createSearchResult(array $response)
     {
-        $results  = $this->extractDocuments($response);
-        $total    = $this->extractTotal($response);
+        $results = $this->extractDocuments($response);
+        $total = $this->extractTotal($response);
         $searchResult = new SearchResult($results, $total);
         return $searchResult;
     }

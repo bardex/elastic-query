@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 /**
  * SearchResult
@@ -24,7 +21,7 @@ class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
 
     public function __construct($results, $totalFound)
     {
-        $results = (array) $results;
+        $results = (array)$results;
         $this->results = $results;
         $this->totalFound = $totalFound;
     }
@@ -82,7 +79,6 @@ class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         return $this->getTotalFound();
     }
-
 
 
     /**

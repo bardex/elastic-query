@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 class Where
 {
@@ -115,7 +112,7 @@ class Where
     }
 
 
-    protected function range($params, $dateFormat=null)
+    protected function range($params, $dateFormat = null)
     {
         if ($dateFormat) {
             $params['format'] = $dateFormat;
@@ -135,7 +132,7 @@ class Where
     {
         if (is_array($this->field)) {
             $this->query->addFilter('multi_match', [
-                'query'  => $text,
+                'query' => $text,
                 'fields' => $this->field
             ]);
         } else {
@@ -203,7 +200,7 @@ class Where
     {
         if (is_array($this->field)) {
             $this->query->addNotFilter('multi_match', [
-                'query'  => $text,
+                'query' => $text,
                 'fields' => $this->field
             ]);
         } else {

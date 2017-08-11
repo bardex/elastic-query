@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 class MultiQuery extends Query
 {

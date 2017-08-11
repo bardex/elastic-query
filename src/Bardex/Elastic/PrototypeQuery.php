@@ -1,9 +1,6 @@
-<?php
-
-namespace Bardex\Elastic;
+<?php namespace Bardex\Elastic;
 
 use Elasticsearch\Client as ElasticClient;
-
 
 /**
  * @package Bardex\Elastic

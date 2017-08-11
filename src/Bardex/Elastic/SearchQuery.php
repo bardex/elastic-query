@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 /**
  * Fluent interface for ElasticSearch
@@ -42,7 +39,7 @@ class SearchQuery extends Query
      */
     public function setIndex($index)
     {
-        $this->params['index'] = (string) $index;
+        $this->params['index'] = (string)$index;
         return $this;
     }
 
@@ -53,7 +50,7 @@ class SearchQuery extends Query
      */
     public function setType($type)
     {
-        $this->params['type'] = (string) $type;
+        $this->params['type'] = (string)$type;
         return $this;
     }
 
@@ -156,7 +153,7 @@ class SearchQuery extends Query
 
     /**
      * Добавить в фильтр сложное условие с вычислениями, на скриптовом языке painless или groovy.
-     * Использование параметров рекомендуется, для увеличения производительности и эффективности компилирования скриптов.
+     * Использование параметров рекомендуется, для увеличения производительности скриптов.
      *
      * @param Script $script - скрипт
      * @return self $this;
@@ -196,8 +193,8 @@ class SearchQuery extends Query
      */
     public function addOrderBy($field, $order = 'asc')
     {
-        $field = (string) $field;
-        $order = (string) $order;
+        $field = (string)$field;
+        $order = (string)$order;
         if (!isset($this->params['body']['sort'])) {
             $this->params['body']['sort'] = [];
         }
@@ -214,8 +211,8 @@ class SearchQuery extends Query
      */
     public function limit($limit, $offset = 0)
     {
-        $this->params['body']['size'] = (int) $limit;
-        $this->params['body']['from'] = (int) $offset;
+        $this->params['body']['size'] = (int)$limit;
+        $this->params['body']['from'] = (int)$offset;
         return $this;
     }
 

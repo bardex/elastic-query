@@ -1,6 +1,4 @@
-<?php
-
-namespace Bardex\Elastic\Listener;
+<?php namespace Bardex\Elastic\Listener;
 
 use Bardex\Elastic\IListener;
 use Psr\Log\LoggerInterface;
@@ -15,17 +13,17 @@ class Logger implements IListener
     /**
      * @var bool логировать все запросы
      */
-    protected $logAllQueries=true;
+    protected $logAllQueries = true;
 
     /**
      * @var bool логировать запросы с ошибками
      */
-    protected $logErrorQueries=true;
+    protected $logErrorQueries = true;
 
     /**
      * @var bool логировать медленные запросы
      */
-    protected $logSlowQueries=true;
+    protected $logSlowQueries = true;
 
     /**
      * @var int лимит времени выполнения запроса после которого он считается медленным (мс)
@@ -42,11 +40,11 @@ class Logger implements IListener
      */
     public function __construct(
         LoggerInterface $logger,
-        $logAllQueries=true,
-        $logErrorQueries=true,
-        $logSlowQueries=true,
-        $slowQueryLimitMs=1000)
-    {
+        $logAllQueries = true,
+        $logErrorQueries = true,
+        $logSlowQueries = true,
+        $slowQueryLimitMs = 1000
+    ) {
         $this->logger = $logger;
         $this->logAllQueries = $logAllQueries;
         $this->logErrorQueries = $logErrorQueries;
@@ -56,6 +54,7 @@ class Logger implements IListener
 
     /**
      * @param LoggerInterface $logger
+     * @return Logger
      */
     public function setLogger(LoggerInterface $logger)
     {
@@ -65,6 +64,7 @@ class Logger implements IListener
 
     /**
      * @param bool $logAllQueries
+     * @return Logger
      */
     public function setLogAllQueries($logAllQueries)
     {
@@ -74,6 +74,7 @@ class Logger implements IListener
 
     /**
      * @param bool $logErrorQueries
+     * @return Logger
      */
     public function setLogErrorQueries($logErrorQueries)
     {
@@ -83,6 +84,7 @@ class Logger implements IListener
 
     /**
      * @param bool $logSlowQueries
+     * @return Logger
      */
     public function setLogSlowQueries($logSlowQueries)
     {
@@ -92,6 +94,7 @@ class Logger implements IListener
 
     /**
      * @param int $slowQueryLimitMs
+     * @return Logger
      */
     public function setSlowQueryLimitMs($slowQueryLimitMs)
     {
@@ -106,10 +109,10 @@ class Logger implements IListener
             $index = $this->getIndexName($query);
             $context = [
                 'query' => json_encode($query),
-                'time'  => $time,
+                'time' => $time,
                 'time_range' => $this->getTimeRange($time),
-                'index'      => $index,
-                'found_rows'   => $response['hits']['total'],
+                'index' => $index,
+                'found_rows' => $response['hits']['total'],
                 'fetched_rows' => count($response['hits']['hits'])
             ];
 
@@ -139,18 +142,32 @@ class Logger implements IListener
     protected function getIndexName(array $query)
     {
         $index = isset($query['index']) ? $query['index'] : '(undefined index)';
-        $type  = isset($query['type']) ? $query['type'] : '(undefined type)';
+        $type = isset($query['type']) ? $query['type'] : '(undefined type)';
         return "$index/$type";
     }
 
     protected function getTimeRange($time)
     {
-        if ($time <= 10)   return '0-10 ms';
-        if ($time <= 30)   return '10-30 ms';
-        if ($time <= 50)   return '30-50 ms';
-        if ($time <= 100)  return '50-100 ms';
-        if ($time <= 500)  return '100-500 ms';
-        if ($time <= 1000) return '500-1000 ms';
-        if ($time > 1000)  return '> 1000 ms';
+        if ($time <= 10) {
+            return '0-10 ms';
+        }
+        if ($time <= 30) {
+            return '10-30 ms';
+        }
+        if ($time <= 50) {
+            return '30-50 ms';
+        }
+        if ($time <= 100) {
+            return '50-100 ms';
+        }
+        if ($time <= 500) {
+            return '100-500 ms';
+        }
+        if ($time <= 1000) {
+            return '500-1000 ms';
+        }
+        if ($time > 1000) {
+            return '> 1000 ms';
+        }
     }
 }

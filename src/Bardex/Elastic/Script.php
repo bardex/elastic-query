@@ -1,7 +1,4 @@
-<?php
-
-namespace Bardex\Elastic;
-
+<?php namespace Bardex\Elastic;
 
 class Script
 {
@@ -27,9 +24,9 @@ class Script
 
     /**
      * Создать новый скрипт
-     * @param string $language=painless
+     * @param string $language =painless
      */
-    public function __construct($language='painless')
+    public function __construct($language = 'painless')
     {
         $this->language = $language;
     }
@@ -78,14 +75,16 @@ class Script
     {
         $script = [
             'script' => [
-                'lang'   => $this->getLanguage(),
+                'lang' => $this->getLanguage(),
                 'inline' => $this->getBody(),
                 'params' => $this->getParams()
             ]
         ];
 
         // because ES
-        if (empty($script['script']['params'])) unset($script['script']['params']);
+        if (empty($script['script']['params'])) {
+            unset($script['script']['params']);
+        }
 
         return $script;
     }
