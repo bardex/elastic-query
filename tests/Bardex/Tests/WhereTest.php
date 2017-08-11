@@ -141,22 +141,6 @@ class WhereTest extends AbstractTestCase
             'validCount' => 2,
             'validId' => [20, 10]
         ],
-        [
-            'name' => 'wildcard',
-            'method' => 'wildcard',
-            'field'  => 'title',
-            'params' => ['Happy*'],
-            'validCount' => 1,
-            'validId' => [2]
-        ],
-        [
-            'name' => 'regexp',
-            'method' => 'regexp',
-            'field'  => 'title',
-            'params' => ['^Happy.*'],
-            'validCount' => 1,
-            'validId' => [2]
-        ],
     ];
 
     public function testInstanceOf()
@@ -185,6 +169,4 @@ class WhereTest extends AbstractTestCase
             $this->assertEquals(count($test['validId']), $test['validCount'], "test method: " . $test['name']);
         }
     }
-
-
 }
