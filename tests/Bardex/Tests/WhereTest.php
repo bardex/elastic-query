@@ -149,6 +149,14 @@ class WhereTest extends AbstractTestCase
             'validCount' => 1,
             'validId' => [2]
         ],
+        [
+            'name' => 'regexp',
+            'method' => 'regexp',
+            'field'  => 'title',
+            'params' => ['^Happy.*'],
+            'validCount' => 1,
+            'validId' => [2]
+        ],
     ];
 
     public function testInstanceOf()

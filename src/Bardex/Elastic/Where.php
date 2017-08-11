@@ -226,5 +226,27 @@ class Where
     public function wildcard($mask)
     {
         $this->query->addFilter('wildcard', [$this->field => $mask]);
+        return $this->query;
+    }
+
+    /**
+     * @param $regexp
+     * @return SearchQuery
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
+     */
+    public function regexp($regexp, $flags = null, $maxDeterminizedStates = null)
+    {
+        $filter = ['value' => $regexp];
+
+        if (null !== $flags) {
+            $filter['flags'] = $flags;
+        }
+
+        if (null !== $maxDeterminizedStates) {
+            $filter['max_determinized_states'] = $maxDeterminizedStates;
+        }
+
+        $this->query->addFilter('regexp', [$this->field => $filter]);
+        return $this->query;
     }
 }
