@@ -217,4 +217,14 @@ class Where
         $this->query->addNotFilter('exists', ["field" => $this->field]);
         return $this->query;
     }
+
+    /**
+     * @param $mask
+     * @return SearchQuery
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-wildcard-query.html
+     */
+    public function wildcard($mask)
+    {
+        $this->query->addFilter('wildcard', [$this->field => $mask]);
+    }
 }
