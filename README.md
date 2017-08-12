@@ -212,6 +212,8 @@ AVAILABLE FILTERING METHODS (in SearchQuery)
 - between($min, $max)
 
 - match($text) - full-text search
+- wildcard('rosy*')
+- regexp('ro.*n')
 
 - less($dateEnd, $dateFormat)
 - lessOrEqual($dateEnd, $dateFormat)
