@@ -231,8 +231,8 @@ class SearchQuery extends Query
         return $params;
     }
 
-    protected function executeQuery(array $query)
+    public function fetchAll()
     {
-        return $this->elastic->search($query);
+        return $this->client->search($this->getQuery());
     }
 }

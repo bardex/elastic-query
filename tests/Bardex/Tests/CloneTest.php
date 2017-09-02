@@ -20,7 +20,7 @@ class CloneTest extends AbstractTestCase
         // whereHelper тоже должен быть разный для каждого объекта
         $this->assertFalse($query->where('id') === $fork->where('id'));
 
-        // но параметры elastic-запроса должны быть одинаковые, по какой-то из объектов не был изменен
+        // но параметры elastic-запроса должны быть одинаковые, пока какой-то из объектов не был изменен
         $this->assertEquals($query->getQuery(), $fork->getQuery());
         $query->where('status')->equal(0);
         $this->assertNotEquals($query->getQuery(), $fork->getQuery());

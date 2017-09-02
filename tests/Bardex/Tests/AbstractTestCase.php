@@ -2,6 +2,7 @@
 
 namespace Bardex\Tests;
 
+use Bardex\Elastic\Client;
 use Bardex\Elastic\SearchQuery;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
@@ -43,10 +44,21 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     protected function createQuery()
     {
-        $query = new SearchQuery(static::$client);
+        $query = $this->createClient()->createSearchQuery();
         $query->setIndex(static::$indexName)
               ->setType(static::$typeName);
 
         return $query;
+    }
+
+    protected function createMultyQuery()
+    {
+        $query = $this->createClient()->createMultiQuery();
+        return $query;
+    }
+
+    protected function createClient()
+    {
+        return new Client(static::$client);
     }
 }

@@ -30,19 +30,19 @@ class MultiQueryTest extends AbstractTestCase
         $firstQuery  = $this->createQuery()->where('id')->equal(10);
         $secondQuery = $this->createQuery()->where('id')->in([20,30]);
 
-        $multiQuery = new MultiQuery(static::$client);
-        $multiQuery->addQuery('first', $firstQuery);
-        $multiQuery->addQuery('second', $secondQuery);
-        $results = $multiQuery->fetchAll();
+        $results = $this->createMultyQuery()
+            ->addQuery($firstQuery)
+            ->addQuery($secondQuery)
+            ->fetchAll();
 
         $this->assertInstanceOf(SearchResult::class, $results, 'instance_of');
-        $this->assertInstanceOf(SearchResult::class, $results['first'], 'first_instance_of');
-        $this->assertInstanceOf(SearchResult::class, $results['second'], 'second_instance_of');
+        $this->assertInstanceOf(SearchResult::class, $results[0], 'first_instance_of');
+        $this->assertInstanceOf(SearchResult::class, $results[1], 'second_instance_of');
 
-        $this->assertCount(1, $results['first'], 'first_count');
-        $this->assertCount(2, $results['second'], 'second_count');
+        $this->assertCount(1, $results[0], 'first_count');
+        $this->assertCount(2, $results[1], 'second_count');
 
-        $this->assertEquals(1, $results['first']->getTotalCount(), 'first_total_count');
-        $this->assertEquals(2, $results['second']->getTotalCount(), 'second_total_count');
+        $this->assertEquals(1, $results[0]->getTotalCount(), 'first_total_count');
+        $this->assertEquals(2, $results[1]->getTotalCount(), 'second_total_count');
     }
 }

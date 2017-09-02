@@ -2,6 +2,7 @@
 
 namespace Bardex\Tests;
 
+use Bardex\Elastic\IListener;
 use \Bardex\Elastic\SearchQuery;
 use \Bardex\Elastic\Script;
 use Prophecy\Exception\Exception;
@@ -19,9 +20,9 @@ class ListenerTest extends AbstractTestCase
 
     public function testOnSuccessListener()
     {
-        $listener = $this->getMock(\Bardex\Elastic\IListener::class);
+        $listener = $this->getMock(IListener::class);
         $query = $this->createQuery();
-        $query->addListener($listener);
+        $query->getClient()->addListener($listener);
         $listener->expects($this->once())->method('onSuccess');
         $listener->expects($this->never())->method('onError');
         $query->fetchAll();
@@ -30,10 +31,10 @@ class ListenerTest extends AbstractTestCase
 
     public function testRemoveListener()
     {
-        $listener = $this->getMock(\Bardex\Elastic\IListener::class);
+        $listener = $this->getMock(IListener::class);
         $query = $this->createQuery();
-        $query->addListener($listener);
-        $query->removeListener($listener);
+        $query->getClient()->addListener($listener);
+        $query->getClient()->removeListener($listener);
         $listener->expects($this->never())->method('onSuccess');
         $listener->expects($this->never())->method('onError');
         $query->fetchAll();
@@ -42,14 +43,14 @@ class ListenerTest extends AbstractTestCase
 
     public function testOnErrorListener()
     {
-        $listener = $this->getMock(\Bardex\Elastic\IListener::class);
+        $listener = $this->getMock(IListener::class);
         $query = $this->createQuery();
+        $query->getClient()->addListener($listener);
 
         $script = new \Bardex\Elastic\Script;
         $script->addLine('this script with error');
         $query->whereScript($script); // query with error
 
-        $query->addListener($listener);
         $listener->expects($this->once())->method('onError');
         $listener->expects($this->never())->method('onSuccess');
 
