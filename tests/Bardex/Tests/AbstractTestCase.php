@@ -45,8 +45,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected function createQuery()
     {
         $query = $this->createClient()->createSearchQuery();
-        $query->setIndex(static::$indexName)
-              ->setType(static::$typeName);
+        $query->setIndex(static::$indexName, static::$typeName);
 
         return $query;
     }

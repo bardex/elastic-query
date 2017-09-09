@@ -34,12 +34,16 @@ class SearchQuery extends Query
 
     /**
      * Установить имя индекса для поиска
-     * @param $index
+     * @param string $index
+     * @param string $type
      * @return self $this
      */
-    public function setIndex($index)
+    public function setIndex($index, $type = null)
     {
         $this->params['index'] = (string)$index;
+        if ($type) {
+            $this->setType($type);
+        }
         return $this;
     }
 
