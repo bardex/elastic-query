@@ -1,10 +1,9 @@
-PHP fluent interface for ElasticSearch. Version 2.
+PHP fluent interface for ElasticSearch
 =======================================
 
-
-[![Build Status](https://travis-ci.org/bardex/elastic-query.svg?branch=v2)](https://travis-ci.org/bardex/elastic-query)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bardex/elastic-query/badges/quality-score.png?b=v2)](https://scrutinizer-ci.com/g/bardex/elastic-query/?branch=v2)
-[![Coverage Status](https://coveralls.io/repos/github/bardex/elastic-query/badge.svg?branch=v2&v=2)](https://coveralls.io/github/bardex/elastic-query?branch=v2&v=2)
+[![Build Status](https://travis-ci.org/bardex/elastic-query.svg?branch=devel)](https://travis-ci.org/bardex/elastic-query)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bardex/elastic-query/badges/quality-score.png?b=devel)](https://scrutinizer-ci.com/g/bardex/elastic-query/?branch=devel)
+[![Coverage Status](https://coveralls.io/repos/github/bardex/elastic-query/badge.svg?branch=devel&v=2)](https://coveralls.io/github/bardex/elastic-query?branch=devel&v=2)
 
 REQUIREMENTS
 ------------
@@ -22,23 +21,15 @@ QUICK START
 ------------
 ```PHP
 <?php
-use Bardex\Elastic\Client;
 
-// 1. Create client: 
-$client = Client::create('localhost');
-
-// OR
 $elastic = \Elasticsearch\ClientBuilder::create()
            ->setHosts(['localhost'])
            ->build();
 
-$client = new Client($elastic);
+$query = new \Bardex\Elastic\SearchQuery($elastic);
 
-// 2. Create search query
-// this is instance of \Bardex\Elastic\SearchQuery
-$query = $client->createSearchQuery(); 
-
-$query->setIndex('shop', 'products')
+$query->setIndex('products')
+  ->setType('products')
   ->where('rubric')->in([1,5,7])
   ->where('price')->greater(0)
   ->where(['title','anons'])->match('game')
@@ -78,88 +69,133 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-sea
 
 ```PHP
 <?php
-use Bardex\Elastic\Client;
 
-$client = Client::create('localhost');
+$elastic = \Elasticsearch\ClientBuilder::create()
+           ->setHosts(['localhost'])
+           ->build();
 
-$postsQuery = $client->createSearchQuery()
-    ->setIndex('blog', 'posts')
-    ->where('userId')->equal(1)
-    ->where('status')->equal('published')
-    ->setOrderBy('dateCreation', 'desc')
-    ->limit(10, 0);
+$posts = new \Bardex\Elastic\SearchQuery($elastic);
+$posts->setIndex('posts')
+  ->setType('posts')
+  ->where('userId')->equal(1)
+  ->where('status')->equal('published')
+  ->setOrderBy('dateCreation', 'desc')
+  ->limit(10, 0);
 
-$userQuery = $client->createSearchQuery()
-    ->setIndex('blog', 'users')
-    ->where('id')->equal(1);
+$user = new \Bardex\Elastic\SearchQuery($elastic);
+$user->setIndex('users')
+  ->setType('users')
+  ->where('id')->equal(1);
 
-$results = $client->createMultiQuery()
-    ->addQuery('posts', $postsQuery)
-    ->addQuery('user', $userQuery)
-    ->fetchAll();
+$multi = new \Bardex\Elastic\MultiQuery($elastic);
+$multi->addQuery('user', $user);
+$multi->addQuery('posts', $posts);
+// instance of \Bardex\Elastic\SearchQuery
+$result = $multi->fetchAll();
 
-$user  = $results['user'];
-$posts = $results['posts'];
+// instance of \Bardex\Elastic\SearchQuery
+$user  = $result['user'];
+$posts = $result['posts'];
 $totalPosts = $posts->getTotalFound();
-
-// OR
-
-$multi = $client->createMultiQuery();
-
-$multi->createSearchQuery('posts')
-    ->setIndex('blog', 'posts')
-    ->where('userId')->equal(1)
-    ->where('status')->equal('published')
-    ->setOrderBy('dateCreation', 'desc')
-    ->limit(10, 0);
-
-$multi->createSearchQuery('user')
-    ->setIndex('blog', 'users')
-    ->where('id')->equal(1);
-    
-$results = $multi->fetchAll();
-$user  = $results['user'];
-$posts = $results['posts'];
 ?>
 ```
-
 
 USING LISTENER FOR LOGGING
 --------------------------
 ```PHP
 <?php
-use Bardex\Elastic\Client;
+$elastic = \Elasticsearch\ClientBuilder::create()
+           ->setHosts(['localhost'])
+           ->build();
 
+$logger = new Logger; // some logger implemented \Psr\Log\LoggerInterface, like Monolog.
+$logger->setFacility('elastic-query');
+$listener = new \Bardex\Elastic\Listener\Logger($logger);
+$listener->setLogAllQueries(true);   // debug log-level
+$listener->setLogErrorQueries(true); // error log-level
+$listener->setLogSlowQueries(true);  // warning log-level
+$listener->setSlowQueryLimitMs(100);
 
-$client = Client::create('localhost');
+$query = new \Bardex\Elastic\SearchQuery($elastic);
+$query->addListener($listener);
 
-// some logger implemented \Psr\Log\LoggerInterface, like Monolog.
-$logger = new Logger; 
+$query->setIndex('products')
+  ->setType('products')
+  ->where('rubric')->in([1,5,7])
+  ->where('price')->greater(0)
+  ->addOrderBy('dateCreation', 'desc')
+  ->limit(30, 0);
+
+$query->fetchAll();
+?>
+```
+
+USING PROTOTYPE FOR CREATION QUERY OBJECTS
+------------------------------------------
+You can use one or more pre-configured prototypes for creating queries. 
+
+```PHP
+<?php
+$elastic = \Elasticsearch\ClientBuilder::create()
+           ->setHosts(['localhost'])
+           ->build();
+
+$prototype = new \Bardex\Elastic\PrototypeQuery($elastic);
+
+$logger = new Logger; // some logger implemented \Psr\Log\LoggerInterface, like Monolog.
 $logger->setFacility('elastic-query');
 
-$log = new \Bardex\Elastic\Listener\Logger($logger);
-$log->setLogAllQueries(true);   // debug log-level
-$log->setLogErrorQueries(true); // error log-level
-$log->setLogSlowQueries(true);  // warning log-level
-$log->setSlowQueryLimitMs(100);
+$listener = new \Bardex\Elastic\Listener\Logger($logger);
+$listener->setLogAllQueries(true);   // debug log-level
+$listener->setLogErrorQueries(true); // error log-level
+$listener->setLogSlowQueries(true);  // warning log-level
+$listener->setSlowQueryLimitMs(100);
+$prototype->addListener($listener);
 
-$client->addListener($log);
+$user = $prototype->createSearchQuery()
+    ->setIndex('users')
+    ->setType('users')
+    ->where('id')->equal(1);
+
+$posts = $prototype->createSearchQuery()
+    ->setIndex('posts')
+    ->setType('posts')
+    ->where('user_id')->equal(1);
+
+
+$multiQuery  = $prototype->createMultiQuery();
+$multiQuery->addQuery('user', $user);
+$multiQuery->addQuery('posts', $posts);
+$results = $multiQuery->fetchAll();        
 
 ?>
 ```
 
-USE OF A CUSTOM HYDRATOR
-------------------------
 ```PHP
 <?php
-use Bardex\Elastic\Client;
-
-$client = Client::create('localhost');
-
-// hydrator must implements interface \Bardex\Elastic\IHydrator or extends \Bardex\Elastic\Hydrator
-$hydrator = new CustomHydrator;
-$client->setHydrator($hydrator);
-
+class UserElasticRepository 
+{
+   /**
+    * @var \Bardex\Elastic\PrototypeQuery  
+    */
+    protected $elastic;
+    
+    public function __construct(\Bardex\Elastic\PrototypeQuery $elastic) 
+    {
+        $this->elastic = $elastic;    
+    }
+    
+    public function findById($id)
+    {
+        return $this->elastic->createSearchQuery()
+                             ->setIndex('users')
+                             ->setType('users')
+                             ->where('id')->equal($id)
+                             ->limit(1)
+                             ->fetchAll()
+                             ->getFirst();
+    }
+}
 ?>
 ```
 
@@ -304,6 +340,6 @@ Get prepared elastic query as php-array:
 Get raw response from ElasticSearch server:
 ```PHP
 <?php
-    $query->fetchAll(false);
+    $query->fetchRaw();
 ?>
 ```
