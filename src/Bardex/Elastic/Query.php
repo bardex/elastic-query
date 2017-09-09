@@ -37,5 +37,4 @@ abstract class Query
      * @return SearchResult|array
      */
     abstract public function fetchAll($hydration = true);
-
 }

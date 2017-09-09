@@ -235,6 +235,8 @@ class Where
      * Регулярное выражение должно указываться в нижнем регистре, см. оф.документацию
      * Внимание! низкая производительность
      * @param $regexp
+     * @param $flags
+     * @param $maxDeterminizedStates
      * @return SearchQuery
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html
      */

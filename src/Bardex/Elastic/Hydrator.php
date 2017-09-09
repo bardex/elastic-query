@@ -1,6 +1,5 @@
 <?php namespace Bardex\Elastic;
 
-
 class Hydrator implements IHydrator
 {
 
@@ -28,7 +27,8 @@ class Hydrator implements IHydrator
         if (isset($response['hits']['hits'])) {
             foreach ($response['hits']['hits'] as $hit) {
                 $row = $hit['_source'];
-                if (isset($hit['fields'])) { // script fields
+                // script fields
+                if (isset($hit['fields'])) {
                     foreach ($hit['fields'] as $field => $data) {
                         if (count($data) == 1) {
                             $row[$field] = array_shift($data);
