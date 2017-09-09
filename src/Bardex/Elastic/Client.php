@@ -34,7 +34,7 @@ class Client
     public static function create($host)
     {
         $es = ElasticClientBuilder::create()
-            ->setHosts((array)$host)
+            ->setHosts((array) $host)
             ->build();
 
         return new static($es);
@@ -118,22 +118,32 @@ class Client
         }
     }
 
+    /**
+     * @param string $endpoint
+     * @param array $query
+     * @return array
+     * @throws \Exception
+     */
     public function query($endpoint, array $query)
     {
-        // send query to elastic
-        $start = microtime(1);
-
         try {
+            $start = microtime(1);
+            // send query to ES
             $result = call_user_func([$this->elastic, $endpoint], $query);
             $time = round((microtime(1) - $start) * 1000);
             $this->triggerSuccess($query, $result, $time);
-            return $result;
         } catch (\Exception $e) {
             $this->triggerError($query, $e);
             throw $e;
         }
+        return $result;
     }
 
+    /**
+     * @param array $query
+     * @param bool $hydration
+     * @return SearchResult|mixed
+     */
     public function search(array $query, $hydration = true)
     {
         $response = $this->query('search', $query);
@@ -145,6 +155,11 @@ class Client
         }
     }
 
+    /**
+     * @param array $query
+     * @param bool $hydration
+     * @return SearchResult[]|mixed
+     */
     public function msearch(array $query, $hydration = true)
     {
         $responses = $this->query('msearch', $query);
@@ -153,7 +168,7 @@ class Client
             foreach ($responses['responses'] as $response) {
                 $results[] = $this->getHydrator()->hydrateResponse($response);
             }
-            return new SearchResult($results, 0);
+            return $results;
         } else {
             return $responses;
         }

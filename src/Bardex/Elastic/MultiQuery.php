@@ -4,12 +4,31 @@ class MultiQuery extends Query
 {
     protected $queryList = [];
 
-    public function addQuery(SearchQuery $query)
+    /**
+     * @param string $alias
+     * @return SearchQuery
+     */
+    public function createSearchQuery($alias)
     {
-        $this->queryList[] = $query;
+        $query = $this->client->createSearchQuery();
+        $this->addQuery($alias, $query);
+        return $query;
+    }
+
+    /**
+     * @param string $alias
+     * @param SearchQuery $query
+     * @return MultiQuery
+     */
+    public function addQuery($alias, SearchQuery $query)
+    {
+        $this->queryList[$alias] = $query;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getQuery()
     {
         $params = ['body' => []];
@@ -24,8 +43,23 @@ class MultiQuery extends Query
         return $params;
     }
 
+    /**
+     * @param bool $hydration
+     * @return SearchResult|mixed
+     */
     public function fetchAll($hydration = true)
     {
-        return $this->client->msearch($this->getQuery(), $hydration);
+        $responses = $this->client->msearch($this->getQuery(), $hydration);
+        if ($hydration) {
+            $aliases = array_keys($this->queryList);
+            $results = [];
+            foreach ($responses as $i => $response) {
+                $alias = $aliases[$i];
+                $results[$alias] = $response;
+            }
+            return new SearchResult($results, 0);
+        } else {
+            return $responses;
+        }
     }
 }

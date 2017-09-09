@@ -1,15 +1,12 @@
-<?php
-
-namespace Bardex\Tests;
+<?php namespace Bardex\Tests;
 
 use Bardex\Elastic\Client;
-use Bardex\Elastic\SearchQuery;
 
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-    * @var \Elasticsearch\Client $client;
-    */
+     * @var \Elasticsearch\Client $client ;
+     */
     protected static $client;
     protected static $indexName;
     protected static $typeName;
@@ -17,7 +14,7 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
     public static function setClient(\Elasticsearch\Client $client, $index)
     {
-        static::$client    = $client;
+        static::$client = $client;
         static::$indexName = $index;
     }
 
@@ -27,13 +24,13 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
 
         static::$typeName = str_replace('\\', '_', get_called_class());
 
-        if ( ! empty(static::$testdata) ) {
+        if (!empty(static::$testdata)) {
             foreach (static::$testdata as $data) {
                 $params = [
                     'index' => static::$indexName,
-                    'type'  => static::$typeName,
-                    'id'    => $data['id'],
-                    'body'  => $data
+                    'type' => static::$typeName,
+                    'id' => $data['id'],
+                    'body' => $data
                 ];
                 static::$client->index($params);
             }
