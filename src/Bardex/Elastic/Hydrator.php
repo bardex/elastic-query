@@ -37,10 +37,17 @@ class Hydrator implements IHydrator
                         }
                     }
                 }
-                $results[] = $row;
+                if ($this->filter($row)) {
+                    $results[] = $row;
+                }
             }
         }
         return $results;
+    }
+
+    protected function filter($row)
+    {
+        return $row;
     }
 
 

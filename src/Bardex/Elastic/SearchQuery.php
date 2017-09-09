@@ -231,8 +231,8 @@ class SearchQuery extends Query
         return $params;
     }
 
-    public function fetchAll()
+    public function fetchAll($hydration = true)
     {
-        return $this->client->search($this->getQuery());
+        return $this->client->search($this->getQuery(), $hydration);
     }
 }

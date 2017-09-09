@@ -24,8 +24,9 @@ class MultiQuery extends Query
         return $params;
     }
 
-    public function fetchAll()
+    public function fetchAll($hydration=true)
     {
-        return $this->client->msearch($this->getQuery());
+        return $this->client->msearch($this->getQuery(), $hydration);
     }
+
 }

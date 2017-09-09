@@ -7,12 +7,8 @@
  */
 abstract class Query
 {
-    const HYDRATE_RAW = 0;
-    const HYDRATE_OBJECT = 1;
-
     /** @var Client */
     protected $client;
-
 
     /**
      * @param Client $client
@@ -30,11 +26,16 @@ abstract class Query
         return $this->client;
     }
 
-
     /**
      * Получить собранный elasticsearch-запрос
      * @return array
      */
     abstract public function getQuery();
+
+    /**
+     * @param bool $hydration
+     * @return SearchResult|array
+     */
+    abstract public function fetchAll($hydration = true);
 
 }

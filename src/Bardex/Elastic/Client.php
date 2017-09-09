@@ -134,20 +134,28 @@ class Client
         }
     }
 
-    public function search(array $query)
+    public function search(array $query, $hydration = true)
     {
         $response = $this->query('search', $query);
-        $result = $this->getHydrator()->hydrateResponse($response);
-        return $result;
+        if ($hydration) {
+            $result = $this->getHydrator()->hydrateResponse($response);
+            return $result;
+        } else {
+            return $response;
+        }
     }
 
-    public function msearch(array $query)
+    public function msearch(array $query, $hydration = true)
     {
         $responses = $this->query('msearch', $query);
-        $results = [];
-        foreach ($responses['responses'] as $response) {
-            $results[] = $this->getHydrator()->hydrateResponse($response);
+        if ($hydration) {
+            $results = [];
+            foreach ($responses['responses'] as $response) {
+                $results[] = $this->getHydrator()->hydrateResponse($response);
+            }
+            return new SearchResult($results, 0);
+        } else {
+            return $responses;
         }
-        return new SearchResult($results, 0);
     }
 }
