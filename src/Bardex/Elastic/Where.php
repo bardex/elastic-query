@@ -2,22 +2,40 @@
 
 class Where
 {
+    /** @var  string $field */
     protected $field;
 
+    /** @var SearchQuery $query */
     protected $query;
 
+    /** @var  string $context */
+    protected $context;
 
     public function __construct(SearchQuery $query)
     {
         $this->query = $query;
     }
 
+    public function init($field, $context = Query::CONTEXT_DEFAULT)
+    {
+        $this->setField($field);
+        $this->setContext($context);
+    }
+
     /**
-     * @param mixed $field
+     * @param string $field
      */
     public function setField($field)
     {
         $this->field = $field;
+    }
+
+    /**
+     * @param string $context
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
     }
 
     /**
@@ -26,7 +44,7 @@ class Where
      */
     public function equal($value)
     {
-        $this->query->addFilter('term', [$this->field => $value]);
+        $this->query->addFilter('term', [$this->field => $value], $this->context);
         return $this->query;
     }
 
@@ -41,7 +59,7 @@ class Where
     {
         // потому что ES не понимает дырки в ключах
         $values = array_values($values);
-        $this->query->addFilter('terms', [$this->field => $values]);
+        $this->query->addFilter('terms', [$this->field => $values], $this->context);
         return $this->query;
     }
 
@@ -117,7 +135,7 @@ class Where
         if ($dateFormat) {
             $params['format'] = $dateFormat;
         }
-        $this->query->addFilter('range', [$this->field => $params]);
+        $this->query->addFilter('range', [$this->field => $params], $this->context);
         return $this->query;
     }
 
@@ -134,9 +152,9 @@ class Where
             $this->query->addFilter('multi_match', [
                 'query' => $text,
                 'fields' => $this->field
-            ]);
+            ], $this->context);
         } else {
-            $this->query->addFilter('match', [$this->field => $text]);
+            $this->query->addFilter('match', [$this->field => $text], $this->context);
         }
         return $this->query;
     }
@@ -147,7 +165,7 @@ class Where
      */
     public function exists()
     {
-        $this->query->addFilter('exists', ["field" => $this->field]);
+        $this->query->addFilter('exists', ["field" => $this->field], $this->context);
         return $this->query;
     }
 
@@ -227,7 +245,7 @@ class Where
      */
     public function wildcard($mask)
     {
-        $this->query->addFilter('wildcard', [$this->field => $mask]);
+        $this->query->addFilter('wildcard', [$this->field => $mask], $this->context);
         return $this->query;
     }
 
@@ -252,7 +270,7 @@ class Where
             $filter['max_determinized_states'] = $maxDeterminizedStates;
         }
 
-        $this->query->addFilter('regexp', [$this->field => $filter]);
+        $this->query->addFilter('regexp', [$this->field => $filter], $this->context);
         return $this->query;
     }
 }

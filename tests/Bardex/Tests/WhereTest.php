@@ -1,5 +1,6 @@
 <?php namespace Bardex\Tests;
 
+use Bardex\Elastic\Query;
 use Bardex\Elastic\SearchQuery;
 use Bardex\Elastic\SearchResult;
 
@@ -150,23 +151,32 @@ class WhereTest extends AbstractTestCase
     }
 
 
-    public function testWhereMethods()
+    public function testWhereMethods($context = Query::CONTEXT_DEFAULT)
     {
         foreach ($this->mytests as $test) {
             $query = $this->createQuery();
-            $whereHelper = $query->where($test['field']);
+            $whereHelper = $query->where($test['field'], $context);
             call_user_func_array([$whereHelper, $test['method']], $test['params']);
             $results = $query->fetchAll();
 
             $this->assertInstanceOf(SearchResult::class, $results);
 
-            $this->assertCount($test['validCount'], $results, "test method: " . $test['name']);
-            $this->assertEquals($test['validCount'], $results->getTotalFound(), "test method: " . $test['name']);
-            foreach ($results as $result) {
-                $this->assertContains($result['id'], $test['validId'], "test method: " . $test['name']);
-            }
+            $methodName = "test method: {$test['name']} context:{$context}";
 
-            $this->assertEquals(count($test['validId']), $test['validCount'], "test method: " . $test['name']);
+            $this->assertCount($test['validCount'], $results, $methodName);
+            $this->assertEquals($test['validCount'], $results->getTotalFound(), $methodName);
+            foreach ($results as $result) {
+                $this->assertContains($result['id'], $test['validId'], $methodName);
+            }
+            $this->assertEquals(count($test['validId']), $test['validCount'], $methodName);
+        }
+    }
+
+    public function testContextCompatibility()
+    {
+        $context = [Query::CONTEXT_FILTER, Query::CONTEXT_SHOULD, Query::CONTEXT_MUST];
+        foreach ($context as $c) {
+            $this->testWhereMethods($c);
         }
     }
 }

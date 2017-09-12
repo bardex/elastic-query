@@ -7,6 +7,13 @@
  */
 abstract class Query
 {
+    const CONTEXT_FILTER = 'filter';
+    const CONTEXT_MUST   = 'must';
+    const CONTEXT_SHOULD = 'should';
+    const ORDER_BY_SCORE = '_score';
+    const CONTEXT_DEFAULT = self::CONTEXT_MUST;
+
+
     /** @var Client */
     protected $client;
 

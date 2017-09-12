@@ -108,15 +108,17 @@ class SearchQuery extends Query
      *
      * @param string $type - тип фильтрации (term|terms|match|range)
      * @param $filter - фильтр
+     * @param string $context - контекст запроса Query::CONTEXT_*
      * @link https://www.elastic.co/guide/en/elasticsearch/reference/5.0/query-dsl-terms-query.html
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html
      * @return self $this
      */
-    public function addFilter($type, $filter)
+    public function addFilter($type, $filter, $context = Query::CONTEXT_DEFAULT)
     {
-        if (!isset($this->params['body']['query']['bool']['must'])) {
-            $this->params['body']['query']['bool']['must'] = [];
+        if (!isset($this->params['body']['query']['bool'][$context])) {
+            $this->params['body']['query']['bool'][$context] = [];
         }
-        $this->params['body']['query']['bool']['must'][] = [$type => $filter];
+        $this->params['body']['query']['bool'][$context][] = [$type => $filter];
         return $this;
     }
 
@@ -141,16 +143,18 @@ class SearchQuery extends Query
     /**
      * Создать фильтр.
      *
-     * @param $field - поле по которому фильтруем (id, page.categoryId...)
+     * @param string $field - поле по которому фильтруем (id, page.categoryId...)
+     * @param string $context - контекст запроса Query::CONTEXT_*
      * @example $query->where('channel')->equal(1)->where('page.categoryId')->in([10,12]);
+     * @link https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html
      * @return Where;
      */
-    public function where($field)
+    public function where($field, $context = Query::CONTEXT_DEFAULT)
     {
         if (null === $this->whereHelper) {
             $this->whereHelper = new Where($this);
         }
-        $this->whereHelper->setField($field);
+        $this->whereHelper->init($field, $context);
         return $this->whereHelper;
     }
 
