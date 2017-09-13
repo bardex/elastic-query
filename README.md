@@ -174,11 +174,9 @@ AVAILABLE FILTERING METHODS (in SearchQuery)
 - greater($min)
 - greaterOrEqual($min)
 - between($min, $max)
-
 - match($text) - full-text search
 - wildcard('rosy*')
 - regexp('ro.*n')
-
 - less($dateEnd, $dateFormat)
 - lessOrEqual($dateEnd, $dateFormat)
 - greater($dateStart, $dateFormat)
@@ -209,6 +207,40 @@ $query->where('id')->equal(10)
         ->where('refunds')->notExists();
 ?>
 ```
+
+SEARCH CONTEXT
+--------------
+A query that matches documents matching boolean combinations of other queries. 
+It is built using one or more boolean clauses, each clause with a typed occurrence. 
+The occurrence types are:
+- must - The clause (query) must appear in matching documents and will contribute to the score.
+- filter - The clause (query) must appear in matching documents. However unlike must the score of the query will be ignored. 
+Filter clauses are executed in filter context, meaning that scoring is ignored and clauses are considered for caching.
+- should - The clause (query) should appear in the matching document. If the bool query is in a query context and has a
+ must or filter clause then a document will match the bool query even if none of the should queries match. 
+ In this case these clauses are only used to influence the score. If the bool query is a filter context or has neither
+  must or filter then at least one of the should queries must match a document for it to match the bool query. 
+   
+By default used **must** context.
+
+Also see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html
+
+*Examples*
+```PHP
+<?php
+use Bardex\Elastic\Query;
+
+$query->where('id')->equal(10)
+       ->where('category', Query::CONTEXT_FILTER)->equal(1)
+       ->where('status', Query::CONTEXT_FILTER)->equal('published')
+       ->where('title', Query::CONTEXT_SHOULD)->match('game') 
+       ->where('tags', Query::CONTEXT_SHOULD)->in(['game', 'gamebox']) 
+       ->setOrderBy(Query::ORDER_BY_SCORE, 'desc');
+         
+?>
+```
+
+
 
 FETCH SPECIFIED FIELDS 
 ----------------------
