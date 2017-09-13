@@ -173,4 +173,13 @@ class Client
             return $responses;
         }
     }
+
+    public function executeMultiQuery(MultiQuery $multiQuery)
+    {
+        $results = [];
+        foreach ($multiQuery as $alias => $query) {
+            $results[$alias] = $this->search($query->getQuery());
+        }
+        return new SearchResult($results, 0);
+    }
 }

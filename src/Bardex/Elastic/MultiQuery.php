@@ -1,6 +1,6 @@
 <?php namespace Bardex\Elastic;
 
-class MultiQuery extends Query
+class MultiQuery extends Query implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     protected $queryList = [];
 
@@ -61,5 +61,38 @@ class MultiQuery extends Query
         } else {
             return $responses;
         }
+    }
+
+
+    public function count()
+    {
+        return count($this->queryList);
+    }
+
+    public function offsetExists($alias)
+    {
+        return array_key_exists($alias, $this->queryList);
+    }
+
+    public function offsetGet($alias)
+    {
+        return $this->queryList[$alias];
+    }
+
+    public function offsetSet($alias, $query)
+    {
+        $this->addQuery($alias, $query);
+        return $this;
+    }
+
+    public function offsetUnset($alias)
+    {
+        unset($this->queryList[$alias]);
+        return $this;
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->queryList);
     }
 }
