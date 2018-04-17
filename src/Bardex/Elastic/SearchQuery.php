@@ -225,6 +225,31 @@ class SearchQuery extends Query
     }
 
     /**
+     * Включить подсветку найденного
+     * @param array $fields - поля, которые будут подсвечиваться
+     * @param int $fragment_size - размер подсвеченного фрагмента
+     * @param array|string $pre_tags - открывающий(ие) тэг(и)
+     * @param array|string $post_tags - закрывающий(ие) тэг(и)
+     * @return $this
+     */
+    public function highlight($fields, $fragment_size=100, $pre_tags = '<em>', $post_tags = '</em>')
+    {
+        $arr = [];
+        foreach ($fields as $field) {
+            $arr[$field] = new stdClass();
+        }
+
+        $this->params['body']['highlight'] = [
+            'fields' => $arr,
+            'fragment_size'=> $fragment_size,
+            'pre_tags' => $pre_tags,
+            'post_tags' => $post_tags
+        ];
+
+        return $this;
+    }
+
+    /**
      * Получить собранный запрос
      * @return array
      */
