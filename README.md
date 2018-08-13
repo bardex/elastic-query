@@ -61,6 +61,9 @@ foreach ($results as $result) {
     echo $result['id'] . ':' . $result['title'] . '<br>';
 }
 
+//Fetch one column as array
+$result->fetchColumn('id'); // ex. return [1,2,3] or []
+
 // get first result (or null if empty)
 $first = $results->getFirst();
 

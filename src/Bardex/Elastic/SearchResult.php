@@ -52,6 +52,22 @@ class SearchResult implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
+     * Fetch one column from all results as array
+     * @param $column
+     * @return array
+     */
+    public function fetchColumn($column)
+    {
+        $result = [];
+        foreach ($this as $item) {
+            if (isset($item[$column])) {
+                $result[] = $item[$column];
+            }
+        }
+        return $result;
+    }
+
+    /**
      * Method returns count of returned query results.
      *
      * @return int

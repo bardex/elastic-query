@@ -32,7 +32,7 @@ class SearchResultTest extends AbstractTestCase
         $this->assertEquals($testResults[0], $result->getFirst());
 
         // test array access
-        for ($i=0; $i < $limit; ++$i) {
+        for ($i = 0; $i < $limit; ++$i) {
             $this->assertEquals($testResults[$i], $result[$i]);
         }
 
@@ -50,11 +50,10 @@ class SearchResultTest extends AbstractTestCase
         $this->assertFalse(isset($result[0]));
 
         // set
-        $newSet = [10,20,30];
+        $newSet = [10, 20, 30];
         $result[1] = $newSet;
 
         $this->assertEquals($newSet, $result[1]);
-
     }
 
     public function testEmpty()
@@ -65,4 +64,17 @@ class SearchResultTest extends AbstractTestCase
         $this->assertEmpty($result->getFirst());
     }
 
+    public function testFetchColumn()
+    {
+        $testResults = [
+            ['title' => 'test no id'],
+            ['id' => 10, 'title' => 'test 10'],
+            ['title' => 'test no id'],
+            ['id' => 20, 'title' => 'test 20'],
+            ['id' => 30, 'title' => 'test 30'],
+        ];
+
+        $result = new SearchResult($testResults, 4);
+        $this->assertEquals([10,20,30], $result->fetchColumn('id'));
+    }
 }
