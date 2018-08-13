@@ -54,6 +54,22 @@ class WhereTest extends AbstractTestCase
             'validId' => [20]
         ],
         [
+            'name' => 'matchAnd',
+            'method' => 'match',
+            'field' => 'title',
+            'params' => ['alice record'],
+            'validCount' => 1,
+            'validId' => [20]
+        ],
+        [
+            'name' => 'matchOr',
+            'method' => 'match',
+            'field' => 'title',
+            'params' => ['happy alice'],
+            'validCount' => 2,
+            'validId' => [2, 20]
+        ],
+        [
             'name' => 'exists',
             'method' => 'exists',
             'field' => 'channels',
