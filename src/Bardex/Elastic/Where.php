@@ -143,18 +143,27 @@ class Where
     /**
      * Добавить фильтр полнотекстового поиска, этот фильтр влияет на поле релевантности _score.
      *
-     * @param $text - поисковая фраза
+     * @param string $text - поисковая фраза
+     * @param string $operator - or|and
      * @return SearchQuery;
      */
-    public function match($text)
+    public function match($text, $operator = 'or')
     {
         if (is_array($this->field)) {
-            $this->query->addFilter('multi_match', [
-                'query' => $text,
-                'fields' => $this->field
-            ], $this->context);
+            $filter = [
+                'query'    => $text,
+                'fields'   => $this->field,
+                'operator' => $operator
+            ];
+            $this->query->addFilter('multi_match', $filter, $this->context);
         } else {
-            $this->query->addFilter('match', [$this->field => $text], $this->context);
+            $filter = [
+                $this->field => [
+                    'query'    => $text,
+                    'operator' => $operator
+                ]
+            ];
+            $this->query->addFilter('match', $filter, $this->context);
         }
         return $this->query;
     }
