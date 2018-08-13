@@ -174,7 +174,7 @@ AVAILABLE FILTERING METHODS (in SearchQuery)
 - greater($min)
 - greaterOrEqual($min)
 - between($min, $max)
-- match($text) - full-text search
+- match($text, $operator = 'or') - full-text search
 - wildcard('rosy*')
 - regexp('ro.*n')
 - less($dateEnd, $dateFormat)
