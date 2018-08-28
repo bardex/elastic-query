@@ -12,32 +12,50 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
     protected static $typeName;
     protected static $testdata;
 
-    public static function setClient(\Elasticsearch\Client $client, $index)
+    public static function setClient(\Elasticsearch\Client $client)
     {
         static::$client = $client;
-        static::$indexName = $index;
     }
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        static::$typeName = str_replace('\\', '_', get_called_class());
+        static::$typeName  = strtolower(str_replace('\\', '_', get_called_class()));
+        static::$indexName = strtolower(str_replace('\\', '_', get_called_class()));
+
+        $client = static::$client;
+        $index  = static::$indexName;
+        $type   = static::$typeName;
+
+        // drop index if exists
+        if ($client->indices()->exists(['index' => $index])) {
+            $client->indices()->delete(['index' => $index]);
+        }
+
+        // create test index
+        $client->indices()->create([
+            'index' => $index,
+            'body'  => [
+                'settings' => [
+                    'number_of_shards' => 1,
+                    'number_of_replicas' => 0,
+                ]
+            ]
+        ]);
 
         if (!empty(static::$testdata)) {
             foreach (static::$testdata as $data) {
-                $params = [
-                    'index' => static::$indexName,
-                    'type' => static::$typeName,
-                    'id' => $data['id'],
-                    'body' => $data
-                ];
-                static::$client->index($params);
+                $client->index([
+                    'index' => $index,
+                    'type'  => $type,
+                    'id'    => $data['id'],
+                    'body'  => $data
+                ]);
             }
-            static::$client->indices()->refresh(['index' => static::$indexName]);
+            $client->indices()->refresh(['index' => $index]);
         }
     }
-
 
     protected function createQuery()
     {
