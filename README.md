@@ -194,6 +194,7 @@ AVAILABLE FILTERING METHODS (in SearchQuery)
 - notMatch($text) - text not match
 - notExists() - field not exists or empty
 
+- minScore() - filtered by min score
 
 Also see class \Bardex\Elastic\Where.  
 Date format see https://www.elastic.co/guide/en/elasticsearch/reference/5.0/mapping-date-format.html  
@@ -207,7 +208,8 @@ $query->where('id')->equal(10)
         ->where(['title','anons'])->match('game') // full-text search by multi fields
         ->where('price')->between(100,1000) // min and max values included
         ->where('date_creation')->greater('2017-01-31T23:00:00+03:00', 'date_time_no_millis')
-        ->where('refunds')->notExists();
+        ->where('refunds')->notExists()
+        ->minScore(0.1);
 ?>
 ```
 
