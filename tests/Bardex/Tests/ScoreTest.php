@@ -35,7 +35,7 @@ class ScoreTest extends AbstractTestCase
               ->minScore(0.1)
               ->setOrderBy('_score', 'desc');
 
-        $results = $query->fetchAll(false);
+        $results = $query->fetchAll();
 
         $this->assertCount(1, $results);
 
