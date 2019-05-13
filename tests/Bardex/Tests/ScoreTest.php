@@ -1,5 +1,6 @@
 <?php namespace Bardex\Tests;
 
+use Bardex\Elastic\Query;
 use Bardex\Elastic\SearchQuery;
 use Bardex\Elastic\SearchResult;
 
@@ -7,35 +8,37 @@ class ScoreTest extends AbstractTestCase
 {
     protected static $testdata = [
         [
-            'id' => 2,
+            'id' => 1,
             'title' => 'Happy friends',
-            'channels' => [75],
-            'publicDate' => '2002-01-01T00:00:00+03:00',
+            'status' => 1,
         ],
         [
-            'id' => 20,
-            'title' => 'title Alice record',
-            'channels' => [1, 2, 3],
-            'publicDate' => '2017-01-01T00:00:00+03:00',
+            'id' => 2,
+            'title' => 'Alice',
+            'status' => 1,
         ],
         [
-            'id' => 10,
-            'title' => 'title Bob record',
-            'anons' => 'Bob is Alice friend',
-            'channels' => [],
-            'publicDate' => '2016-12-31T23:00:00+03:00',
+            'id' => 3,
+            'title' => 'Bob',
+            'status' => 1,
         ]
     ];
 
 
-
-    public function testScoreExists()
+    public function testMinScore()
     {
         /** @var SearchQuery $query */
         $query = $this->createQuery();
-        /** @var SearchResult $results */
-        $results = $query->where('title')->match('friends')->fetchAll();
-        $item = $results->getFirst();
-        $this->assertArrayHasKey('__score', $item);
+
+        $query->where('title', Query::CONTEXT_SHOULD)->match('friends')
+              ->where('status', Query::CONTEXT_FILTER)->equal(1)
+              ->setOrderBy('_score', 'desc');
+
+        $results = $query->fetchAll(false);
+
+        print_r($results);
+
+
+
     }
 }

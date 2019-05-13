@@ -224,6 +224,12 @@ class SearchQuery extends Query
         return $this;
     }
 
+    public function minScore($score)
+    {
+        $this->params['body']['min_score'] = $score;
+        return $this;
+    }
+
     /**
      * Получить собранный запрос
      * @return array
