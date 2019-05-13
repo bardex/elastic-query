@@ -37,7 +37,6 @@ class Hydrator implements IHydrator
                         }
                     }
                 }
-                $row['__score'] = $hit['_score'];
                 if ($this->filter($row)) {
                     $results[] = $row;
                 }
