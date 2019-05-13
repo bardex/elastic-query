@@ -57,6 +57,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * @return \Bardex\Elastic\SearchQuery
+     */
     protected function createQuery()
     {
         $query = $this->createClient()->createSearchQuery();
@@ -65,12 +68,18 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
         return $query;
     }
 
+    /**
+     * @return \Bardex\Elastic\MultiQuery
+     */
     protected function createMultyQuery()
     {
         $query = $this->createClient()->createMultiQuery();
         return $query;
     }
 
+    /**
+     * @return Client
+     */
     protected function createClient()
     {
         return new Client(static::$client);

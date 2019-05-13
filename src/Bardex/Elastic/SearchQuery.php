@@ -239,6 +239,11 @@ class SearchQuery extends Query
         return $params;
     }
 
+    /**
+     * @param bool $hydration
+     *
+     * @return array|SearchResult|mixed
+     */
     public function fetchAll($hydration = true)
     {
         return $this->client->search($this->getQuery(), $hydration);
