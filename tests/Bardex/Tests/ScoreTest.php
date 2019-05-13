@@ -32,13 +32,15 @@ class ScoreTest extends AbstractTestCase
 
         $query->where('title', Query::CONTEXT_SHOULD)->match('friends')
               ->where('status', Query::CONTEXT_FILTER)->equal(1)
+              ->minScore(0.1)
               ->setOrderBy('_score', 'desc');
 
         $results = $query->fetchAll(false);
 
-        print_r($results);
+        $this->assertCount(1, $results);
 
+        $item = $results->getFirst();
 
-
+        $this->assertEquals(1, $item['id']);
     }
 }
